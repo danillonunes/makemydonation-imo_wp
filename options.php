@@ -11,7 +11,7 @@
 <th scope="row"><label for="mmdimo_username"><?php _e( 'Username' ); ?></label></th>
 <td>
   <input type="text" class="regular-text" name="mmdimo_username" id="mmdimo-username" value="<?php echo get_option('mmdimo_username'); ?>" />
-  <p class="description"><?php _e( 'Your Make My Donation account username.' ); ?></p>
+  <p class="description"><?php _e( 'Your Make My Donation account username.' ); ?> <?php _e( 'If you don’t have one yet,' );?> <a href="https://funerals.makemydonation.org/user/register/affiliate" target="_blank"><?php _e( 'create a free account with us' );?></a>.</p>
 </td>
 </tr>
 
@@ -19,7 +19,7 @@
 <th scope="row"><label for="mmdimo_api_key"><?php _e( 'API Key' ); ?></label></th>
 <td>
   <input type="text" class="regular-text" name="mmdimo_api_key" id="mmdimo-api-key" value="<?php echo get_option('mmdimo_api_key'); ?>" />
-  <p class="description"><?php _e( 'The API Key provided by your Make My Donation account.' ); ?></p>
+  <p class="description"><?php _e( 'The API Key provided by your Make My Donation account.' ); ?> <a href="https://funerals.makemydonation.org/user/api" target="_blank"><?php _e( 'Click here to get your api key' );?></a>.</p>
 </td>
 </tr>
 
@@ -53,7 +53,7 @@
       <option value="<?php echo $type; ?>" <?php if ($type == $mmdimo_post_type) { echo 'selected="selected"'; } ?>><?php echo $post_type->labels->singular_name; ?></option>
     <?php endforeach; ?>
   </select>
-  <p class="description"><?php _e( 'If you are using Custom Post Types for your funeral home cases, chose the post type here. If you leave the default option, you will be allowed to manually create a funeral home case for all post types.' ); ?></p>
+  <p class="description"><?php _e( 'If you are using Custom Post Types for your funeral home obituaries, chose the post type here. If you leave the default option, you will be allowed to manually create a funeral home case for all post types.' ); ?></p>
 </td>
 </tr>
 

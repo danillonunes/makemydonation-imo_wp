@@ -3,7 +3,7 @@ Contributors: danillonunes
 Tags: obituary, funeral home, charity, search, third-party, donation
 Requires at least: 3.7
 Tested up to: 4.4.2
-Stable tag: 1.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,7 +17,11 @@ Now every funeral home in the United States can provide a simple, safe and trans
 
 This plugin integrates your WordPress site with our In Memory Of API so with just one click you can enable donations within in your obituary pages and have access to our complete list charities and donation reports.
 
-The charity search engine is powered by OrgHunter, America’s most trusted charity resource!
+Funeral home website administrators [register for your FREE API key](https://funerals.makemydonation.org/user/register/affiliate)
+
+For support or more information contact: info@makemydonation.org
+
+The charity search engine is powered by [OrgHunter](http://www.orghunter.com), America’s most trusted charity resource!
 
 
 == Installation ==

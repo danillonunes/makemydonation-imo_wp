@@ -14,7 +14,7 @@
     <p>
       <label for="mmdimo-family-email">Family email</label>
       <br>
-      <input type="text" id="mmdimo-family-email" name="mmdimo_family_email" size="20" value="<?php echo $mmdimo_family_email; ?>">
+      <input type="text" id="mmdimo-family-email" name="mmdimo_family_email" size="30" value="<?php echo $mmdimo_family_email; ?>">
     </p>
   </div>
 
