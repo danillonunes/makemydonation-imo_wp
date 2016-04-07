@@ -7,7 +7,7 @@ Stable tag: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Integrates your funeral home site with the Make My Donation IMO free service and allow donations to over 1.4 million eligible US charities through our platform.
+Integrate your funeral home site with our Make My Donation - In Memory Of Platform and allow donations to over 1.4 million eligible US charities.
 
 == Description ==
 
