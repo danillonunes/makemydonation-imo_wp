@@ -11,9 +11,13 @@ Integrate your funeral home site with our Make My Donation - In Memory Of Platfo
 
 == Description ==
 
-Make My Donation – In Memory Of Platform ( https://funerals.makemydonation.org ) is a FREE service target for all funeral homes in United States, that provides full case management and reporting on all donation activity.
+[Make My Donation – In Memory Of Platform](https://funerals.makemydonation.org) is a FREE service for all funeral homes in United States, instantly provide a donation platform supporting donations to over 1.4 million eligible US based charities.
 
-This plugin integrates your WordPress site with our In Memory Of API so with just one click you can enable donations in your obituary pages and have access to all our available charities and donation reports.
+Now every funeral home in the United States can provide a simple, safe and transparent donation platform for families and loved ones!
+
+This plugin integrates your WordPress site with our In Memory Of API so with just one click you can enable donations within in your obituary pages and have access to our complete list charities and donation reports.
+
+The charity search engine is powered by OrgHunter, America’s most trusted charity resource!
 
 
 == Installation ==
