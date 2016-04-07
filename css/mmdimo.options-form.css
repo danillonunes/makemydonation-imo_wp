@@ -1,0 +1,21 @@
+#mmdimo-username.success,
+#mmdimo-api-key.success {
+  border-color: #46b450;
+  outline: 1px solid #46b450;
+}
+#mmdimo-username.error,
+#mmdimo-api-key.error {
+  border-color: #dc3232;
+  outline: 1px solid #dc3232;
+}
+.mmdimo-select-fhid-label,
+.mmdimo-select-fhid-description {
+  display: none;
+}
+.mmdimo-fhid-loading {
+  visibility: visible;
+  float: none;
+  width: auto;
+  padding-left: 24px;
+  display: block;
+}

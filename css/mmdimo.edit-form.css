@@ -1,0 +1,50 @@
+#mmdimo-charity-active {
+  border: 1px dotted #ddd;
+  border-radius: 5px;
+  color: inherit;
+  cursor: pointer;
+  display: block;
+  float: left;
+  padding: 5px 10px;
+  text-decoration: none;
+}
+#mmdimo-charity-state {
+  margin-right: 10px;
+}
+#mmdimo-charity-state,
+.twitter-typeahead {
+  float: left;
+}
+.mmdimo-field-charity br {
+  clear: both;
+}
+.mmdimo-field-charity .tt-dataset {
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+.mmdimo-field-charity .tt-suggestion {
+  padding: 5px 10px;
+}
+.mmdimo-field-charity .tt-suggestion span {
+  color: #888;
+}
+.mmdimo-field-charity .tt-dataset:hover .tt-cursor,
+.mmdimo-field-charity .tt-dataset:hover .tt-cursor span {
+  background-color: transparent;
+  color: inherit;
+}
+.mmdimo-field-charity .tt-suggestion:hover,
+.mmdimo-field-charity .tt-dataset:hover .tt-suggestion:hover,
+.mmdimo-field-charity .tt-cursor {
+  background-color: #0073aa;
+  color: #fff;
+  cursor: pointer;
+}
+.mmdimo-field-charity .tt-dataset:hover .tt-suggestion:hover span,
+.mmdimo-field-charity .tt-suggestion:hover span,
+.mmdimo-field-charity .tt-cursor span {
+  color: #fff;
+}
