@@ -86,7 +86,7 @@ function mmdimo_add_meta_box() {
   if (!$mmdimo_post_type) {
     $mmdimo_post_type = NULL;
   }
-  add_meta_box( 'mmdimo_meta_box', __('Make My Donation – In Memory Of'), 'mmdimo_meta_box_callback', $mmdimo_post_type, 'normal' );
+  add_meta_box( 'mmdimo_meta_box', __('Make My Donation – In Memory Of', 'mmdimo'), 'mmdimo_meta_box_callback', $mmdimo_post_type, 'normal' );
 }
 
 function mmdimo_meta_box_callback( $post ) {
@@ -142,7 +142,7 @@ function mmdimo_meta_box_save( $post_id, $post, $update ) {
     }
   }
   else {
-    mmdimo_error_message(__( 'Error while connecting to the Make My Donation API server. Edit and save the post to try again.' ));
+    mmdimo_error_message(__( 'Error while connecting to the Make My Donation API server. Edit and save the post to try again.', 'mmdimo' ));
   }
 }
 
