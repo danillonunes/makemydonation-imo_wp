@@ -23,7 +23,7 @@
 </td>
 </tr>
 
-<tr>
+<tr class="mmdimo-fhid">
 <th scope="row">
   <label for="mmdimo_fhid" class="mmdimo-fhid-label"><?php _e( 'Funeral Home ID', 'mmdimo' ); ?></label>
   <label for="mmdimo_select_fhid" class="mmdimo-select-fhid-label"><?php _e( 'Funeral Home', 'mmdimo' ); ?></label>

@@ -12,10 +12,14 @@
 .mmdimo-select-fhid-description {
   display: none;
 }
+.js
+.mmdimo-fhid {
+  display: none;
+}
 .mmdimo-fhid-loading {
-  visibility: visible;
+  display: none;
   float: none;
-  width: auto;
   padding-left: 24px;
-  display: block;
+  visibility: visible;
+  width: auto;
 }
