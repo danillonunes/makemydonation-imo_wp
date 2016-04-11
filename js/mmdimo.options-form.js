@@ -41,11 +41,14 @@ $('form').each(function() {
         },
         complete: function() {
           $fhidLoading.hide();
-          $fhidTR.hide();
+          if ($selectFHID.find('option').length <= 1) {
+            $fhidTR.hide();
+          }
         },
         success: function(data, status, xhr) {
           var funeralHomes = xhr.responseJSON;
 
+          $selectFHID.html('');
           $.each(funeralHomes, function(k, funeralHome) {
             var option = '<option value="' + funeralHome.id + '" ' + ($fhid.val() == funeralHome.id ? 'selected="selected"' : '') + '>' + funeralHome.name + '</option>';
             $selectFHID.append(option);
