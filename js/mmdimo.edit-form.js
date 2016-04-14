@@ -62,12 +62,12 @@ $('#mmdimo_meta_box').each(function() {
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace(),
       dupDetector: function(a, b) { return a.id_str === b.id_str; },
       remote: {
-        url: 'https://funerals.makemydonation.org/orghunter/charitysearch/autocomplete/%QUERY/typeahead',
+        url: 'https://funerals.makemydonation.org/orghunter/charitysearch/autocomplete/%QUERY/typeahead?eligible=1',
         prepare: function(query, settings) {
           var state = $state.val();
           settings.url = settings.url.replace('%QUERY', encodeURIComponent(query));
           if (state) {
-            settings.url = settings.url + '?state=' + state;
+            settings.url = settings.url + '&state=' + state;
           }
           return settings;
         },
