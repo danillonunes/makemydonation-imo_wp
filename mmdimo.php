@@ -58,6 +58,7 @@ function mmdimo_admin_init() {
   register_setting( 'mmdimo', 'mmdimo_api_key' );
   register_setting( 'mmdimo', 'mmdimo_fhid' );
   register_setting( 'mmdimo', 'mmdimo_post_type' );
+  register_setting( 'mmdimo', 'mmdimo_default_state' );
 }
 
 function mmdimo_admin_menu() {
@@ -98,6 +99,14 @@ function mmdimo_meta_box_callback( $post ) {
 
   $mmdimo_charity_metadata = get_post_meta( $post->ID, 'mmdimo_charity_metadata', TRUE );
   $mmdimo_charity = isset( $mmdimo_case['charity'] ) ? $mmdimo_case['charity'] : '';
+
+  $mmdimo_default_state = get_option( 'mmdimo_default_state' );
+  if ( isset( $mmdimo_charity_metadata ) ) {
+    $mmdimo_charity_metadata_obj = json_decode( $mmdimo_charity_metadata );
+    if ( isset( $mmdimo_charity_metadata_obj->state ) && $mmdimo_charity_metadata_obj->state ) {
+      $mmdimo_default_state = $mmdimo_charity_metadata_obj->state;
+    }
+  }
 
   include( MMDIMO_PLUGIN_DIR . '/metabox.php' );
 }
