@@ -2,13 +2,13 @@
 
 <?php if ( !$mmdimo_case || !$mmdimo_case['id'] ): ?>
   <?php wp_nonce_field( 'mmdimo_post_case_create', 'mmdimo_case_nonce' ); ?>
-  <label class="selectit">
-    <input value="1" type="checkbox" name="mmdimo_case_create" id="mmdimo-case-create" <?php if ( $mmdimo_case || $mmdimo_default_checked ) { echo 'checked="checked"'; } ?>> <?php _e( 'Allow Memorial Donations', 'mmdimo' ) ?>
-  </label>
 <?php else: ?>
   <?php wp_nonce_field( 'mmdimo_post_case_update_' . $mmdimo_case['id'], 'mmdimo_case_nonce' ); ?>
   <input type="hidden" name="mmdimo_case_update" value="<?php echo $mmdimo_case['id']; ?>">
 <?php endif; ?>
+<label class="selectit">
+  <input value="1" type="checkbox" name="mmdimo_case_create" id="mmdimo-case-create" <?php if ( $mmdimo_case_checked ) { echo 'checked="checked"'; } ?>> <?php _e( 'Allow Memorial Donations', 'mmdimo' ) ?>
+</label>
 <div class="case-data">
   <div class="mmdimo-field-family-email">
     <p>

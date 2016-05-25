@@ -94,8 +94,17 @@ function mmdimo_add_meta_box() {
 
 function mmdimo_meta_box_callback( $post ) {
   $mmdimo_case = get_post_meta( $post->ID, 'mmdimo_case', TRUE );
-  $mmdimo_default_checked = TRUE;
   $mmdimo_family_email = isset( $mmdimo_case['family_email'] ) ? $mmdimo_case['family_email'] : '';
+
+  $mmdimo_case_checked = TRUE;
+  if ( isset( $mmdimo_case ) && $mmdimo_case ) {
+    if ( isset( $mmdimo_case['status'] ) && $mmdimo_case['status'] == 0 ) {
+      $mmdimo_case_checked = FALSE;
+    }
+  }
+  else if ( $post->post_status != 'auto-draft' ) {
+    $mmdimo_case_checked = FALSE;
+  }
 
   $mmdimo_charity_metadata = get_post_meta( $post->ID, 'mmdimo_charity_metadata', TRUE );
   $mmdimo_charity = isset( $mmdimo_case['charity'] ) ? $mmdimo_case['charity'] : '';
@@ -133,6 +142,7 @@ function mmdimo_meta_box_save( $post_id, $post, $update ) {
     'family_email' => $_POST['mmdimo_family_email'],
     'family_notify' => isset( $_POST['mmdimo_family_notify'] ) && $_POST['mmdimo_family_notify'] ? '1' : '0',
     'charity' => $_POST['mmdimo_charity'],
+    'status' => 1,
   );
   $case = array_merge($current_case, $new_case);
 
@@ -147,6 +157,12 @@ function mmdimo_meta_box_save( $post_id, $post, $update ) {
 
   if ( isset( $saved_case['id'] ) ) {
     update_post_meta( $post_id, 'mmdimo_case', $saved_case );
+
+    if ( $_POST['mmdimo_case_update'] && ( !isset( $_POST['mmdimo_case_create'] ) || !$_POST['mmdimo_case_create'] )) {
+      $saved_case['status'] = 0;
+
+      update_post_meta( $post_id, 'mmdimo_case', $saved_case );
+    }
 
     if ( isset( $_POST['mmdimo_charity_metadata'] ) ) {
       update_post_meta( $post_id, 'mmdimo_charity_metadata', $_POST['mmdimo_charity_metadata'] );
