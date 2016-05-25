@@ -1,12 +1,42 @@
 #mmdimo-charity-active {
-  border: 1px dotted #ddd;
+  border: 1px solid #ddd;
   border-radius: 5px;
   color: inherit;
   cursor: pointer;
   display: block;
   float: left;
-  padding: 5px 10px;
+  padding: 5px 30px 5px 10px;
   text-decoration: none;
+}
+#mmdimo-charity-clear {
+  color: inherit;
+  cursor: pointer;
+  float: left;
+  margin-left: -20px;
+  overflow: hidden;
+  text-indent: 100%;
+  position: relative;
+  width: 20px;
+}
+#mmdimo-charity-clear::before {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  content: "\00d7";
+  font-size: 1.2em;
+  font-weight: bold;
+  left: 0;
+  line-height: 17px;
+  position: absolute;
+  text-align: center;
+  text-indent: 0;
+  width: 18px;
+  z-index: 1000;
+}
+#mmdimo-charity-clear:hover {
+}
+#mmdimo-charity-clear:hover::before {
+  background-color: #efefef;
+  border-style: solid;
 }
 #mmdimo-charity-state {
   margin-right: 10px;

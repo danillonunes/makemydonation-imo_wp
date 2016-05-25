@@ -11,6 +11,7 @@ $('#mmdimo_meta_box').each(function() {
   var $charityMeta = $('#mmdimo-charity-metadata', metabox);
   var $charityName = $charity.after('<input type="text" id="mmdimo-charity-name" size="40">').next('#mmdimo-charity-name');
   var $charityActive = $charity.after('<a id="mmdimo-charity-active" title="Select another charity"></a>').next('#mmdimo-charity-active').hide();
+  var $charityClear = $charityActive.after('<a id="mmdimo-charity-clear" title="Clear selected charity">Remove</a>').next('#mmdimo-charity-clear').hide();
   var options, engine, dataset;
 
   if ($create.length) {
@@ -120,6 +121,7 @@ $('#mmdimo_meta_box').each(function() {
         $charityActive
           .html('<strong>' + suggestion.name + '</strong><br><span>EIN: ' + suggestion.ein + ' — ' + suggestion.city + ', ' + suggestion.state + '</span>')
           .show();
+        $charityClear.show();
         $charity.val(suggestion.ein);
 
         $charityMeta.val(JSON.stringify(metadata));
@@ -136,6 +138,7 @@ $('#mmdimo_meta_box').each(function() {
       $charityActive
         .html('<strong>' + suggestion.name + '</strong><br><span>EIN: ' + suggestion.ein + ' — ' + suggestion.city + ', ' + suggestion.state + '</span>')
         .show();
+      $charityClear.show();
 
       $state.val(metadata.state);
       $charityName.val(suggestion.name);
@@ -147,12 +150,20 @@ $('#mmdimo_meta_box').each(function() {
 
     $charityActive.bind('click', function(event) {
       $charityActive.hide();
+      $charityClear.hide();
       $('.twitter-typeahead', metabox).show();
       $state.show();
       $charityName.show().focus();
+      $charity.val('');
+      $charityMeta.val('');
 
       event.stopPropagation();
       return false;
+    });
+
+    $charityClear.bind('click', function() {
+      $charityActive.trigger('click');
+      $charityName.val('').blur();
     });
   }
 });
