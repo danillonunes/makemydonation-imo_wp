@@ -34,7 +34,7 @@ function get_the_mmdimo_donation_link( $post = 0, $content = NULL, $title = NULL
     $target = 'target="' . $target . '"';
   }
 
-  if ( $post->ID ) {
+  if ( $post->ID && $url ) {
     $link = '<a class="mmdimo-donation-link" href="' . esc_url( $url ) . '" title="' . $title . '" ' . $target . '>' . $content . '</a>';
 
     return apply_filters( 'get_the_mmdimo_donation_link', $link, $post, $url );
