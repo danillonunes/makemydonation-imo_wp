@@ -8,6 +8,10 @@ $('#mmdimo_meta_box').each(function() {
   var $notify = $('.mmdimo-field-family-notify', metabox);
   var $state = $('#mmdimo-charity-state', metabox);
   var $charity = $('#mmdimo-charity', metabox);
+  var $select = $('#mmdimo-charity-select input', metabox);
+  var $all = $('#mmdimo-charity-select-all', metabox);
+  var $single = $('#mmdimo-charity-select-single', metabox);
+  var $charitySelect = $('#mmdimo-charity-single-select', metabox);
   var $charityMeta = $('#mmdimo-charity-metadata', metabox);
   var $charityName = $charity.after('<input type="text" id="mmdimo-charity-name" size="40">').next('#mmdimo-charity-name');
   var $charityActive = $charity.after('<a id="mmdimo-charity-active" title="Select another charity"></a>').next('#mmdimo-charity-active').hide();
@@ -160,6 +164,18 @@ $('#mmdimo_meta_box').each(function() {
       event.stopPropagation();
       return false;
     });
+
+    $select
+      .bind('change', function() {
+        if ($single.is(':checked')) {
+          $charitySelect.show();
+        }
+        else {
+          $charityClear.trigger('click');
+          $charitySelect.hide();
+        }
+      })
+      .trigger('change');
 
     $charityClear.bind('click', function() {
       $charityActive.trigger('click');
