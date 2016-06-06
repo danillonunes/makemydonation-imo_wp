@@ -127,7 +127,7 @@ function mmdimo_meta_box_save( $post_id, $post, $update ) {
 
   if( ( !isset( $_POST['mmdimo_case_create'] ) || !$_POST['mmdimo_case_create'] ) && ( !isset( $_POST['mmdimo_case_update'] ) || !$_POST['mmdimo_case_update'] ) ) return;
 
-  if ( $_POST['mmdimo_case_create'] && ( !isset( $_POST['mmdimo_case_nonce'] ) || !wp_verify_nonce( $_POST['mmdimo_case_nonce'], 'mmdimo_post_case_create' ) ) ) return;
+  if ( $_POST['mmdimo_case_create'] && ( !isset( $_POST['mmdimo_case_update'] ) || !$_POST['mmdimo_case_update'] ) && ( !isset( $_POST['mmdimo_case_nonce'] ) || !wp_verify_nonce( $_POST['mmdimo_case_nonce'], 'mmdimo_post_case_create' ) ) ) return;
 
   if ( $_POST['mmdimo_case_update'] && ( !isset( $_POST['mmdimo_case_nonce'] ) || !wp_verify_nonce( $_POST['mmdimo_case_nonce'], 'mmdimo_post_case_update_' . $_POST['mmdimo_case_update'] ) ) ) return;
 
