@@ -6,7 +6,7 @@
 Plugin Name: Make My Donation – In Memory Of
 Plugin URI: https://wordpress.org/plugins/makemydonation-imo
 Description: Make My Donation – In Memory Of Plugin.
-Version: 1.4
+Version: 1.5
 Author: Make My Donation
 Author URI: http://makemydonation.org
 License: GPLv2 or later
