@@ -1,4 +1,4 @@
-=== Make My Donation – In Memory Of Platform ===
+=== Make My Donation - In Memory Of Platform ===
 Contributors: danillonunes
 Tags: obituary, funeral home, charity, search, third-party, donation
 Requires at least: 3.7
@@ -26,7 +26,7 @@ The charity search engine is powered by [OrgHunter](http://www.orghunter.com), A
 For assistance in installing and configuring the Make My Donation plugin, please contact Funeral Futurist Websites who will properly install and configure the plugin for your website for free.  
 
 ​Please complete the form on this page to get started with the installation:
-[​http://www.funeralfuturistwebsites.com/donation-plugin/](​http://www.funeralfuturistwebsites.com/donation-plugin/)​
+[​www.funeralfuturistwebsites.com/donation-plugin](​http://www.funeralfuturistwebsites.com/donation-plugin)​
 
 == Installation ==
 
