@@ -47,10 +47,15 @@ if ( is_admin() ) {
   add_action( 'wp_ajax_mmdimo_load_funeral_homes', 'mmdimo_load_funeral_homes' );
 }
 
+add_action( 'wp_enqueue_scripts', 'mmdimo_wp_scripts' );
 add_shortcode( 'mmdimo_donation_link', 'shortcode_mmdimo_donation_link' );
 add_shortcode( 'mmdimo_donation_url', 'shortcode_mmdimo_donation_url' );
 add_shortcode( 'mmdimo_donation_charity:name', 'shortcode_mmdimo_donation_charity_name' );
 add_shortcode( 'mmdimo_donation_charity:ein', 'shortcode_mmdimo_donation_charity_ein' );
+
+function mmdimo_wp_scripts() {
+  wp_enqueue_style( 'mmdimo-donation-link', plugin_dir_url( __FILE__ ) . 'css/mmdimo.donation-link.css' );
+}
 
 function mmdimo_admin_init() {
   register_setting( 'mmdimo', 'mmdimo_api_url' );
