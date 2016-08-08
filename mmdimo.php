@@ -3,10 +3,10 @@
  * @package Make My Donation
  */
 /*
-Plugin Name: Make My Donation – In Memory Of
+Plugin Name: Make My Donation - In Memory Of
 Plugin URI: https://wordpress.org/plugins/makemydonation-imo
-Description: Make My Donation – In Memory Of Plugin.
-Version: 1.5
+Description: Integrate your funeral home site with our Make My Donation - In Memory Of Platform and allow donations to over 1.4 million eligible US charities.
+Version: 1.6
 Author: Make My Donation
 Author URI: http://makemydonation.org
 License: GPLv2 or later
