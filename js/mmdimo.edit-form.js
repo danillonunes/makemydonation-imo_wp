@@ -1,22 +1,10 @@
 jQuery(function($) {
 
-$('#mmdimo_meta_box').each(function() {
-  var metabox = this;
-  var $create = $('#mmdimo-case-create', metabox);
-  var $data = $('.case-data', metabox);
-  var $family = $('#mmdimo-family-email', metabox);
-  var $notify = $('.mmdimo-field-family-notify', metabox);
-  var $state = $('#mmdimo-charity-state', metabox);
-  var $charity = $('#mmdimo-charity', metabox);
-  var $select = $('#mmdimo-charity-select input', metabox);
-  var $all = $('#mmdimo-charity-select-all', metabox);
-  var $single = $('#mmdimo-charity-select-single', metabox);
-  var $charitySelect = $('#mmdimo-charity-single-select', metabox);
-  var $charityMeta = $('#mmdimo-charity-metadata', metabox);
-  var $charityName = $charity.after('<input type="text" id="mmdimo-charity-name" size="40">').next('#mmdimo-charity-name');
-  var $charityActive = $charity.after('<a id="mmdimo-charity-active" title="Select another charity"></a>').next('#mmdimo-charity-active').hide();
-  var $charityClear = $charityActive.after('<a id="mmdimo-charity-clear" title="Clear selected charity">Remove</a>').next('#mmdimo-charity-clear').hide();
-  var options, engine, dataset;
+var $metabox = $('#mmdimo_meta_box');
+
+$metabox.each(function() {
+  var $create = $('#mmdimo-case-create', $metabox);
+  var $data = $('.case-data', $metabox);
 
   if ($create.length) {
     $data.hide();
@@ -30,18 +18,47 @@ $('#mmdimo_meta_box').each(function() {
       }
     }).trigger('change');
   }
+});
 
-  if ($family.val() == '') {
-    $notify.hide();
-  }
-  $family.bind('change keydown keyup', function() {
-    if ($family.val() == '') {
+$metabox.each(function() {
+  var $family = $('.mmdimo-field-family-emails input', $metabox);
+  var $notify = $('.mmdimo-field-family-notify', $metabox);
+
+  $family
+    .selectize({
+      'create': true,
+      'createOnBlur': true,
+      'highlight': false,
+      'persist': false,
+      'openOnFocus': false,
+      'maxOptions': 0,
+      'maxItems': null,
+      'createFilter': /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+    })
+    .bind('change', function() {
       $notify.hide();
-    }
-    else {
-      $notify.show();
-    }
-  });
+      if ($family.val() != '') {
+        $notify.show();
+      }
+    })
+    .trigger('change');
+});
+
+$('#mmdimo_meta_box').each(function() {
+  var metabox = this;
+  var $create = $('#mmdimo-case-create', metabox);
+  var $data = $('.case-data', metabox);
+  var $state = $('#mmdimo-charity-state', metabox);
+  var $charity = $('#mmdimo-charity', metabox);
+  var $select = $('#mmdimo-charity-select input', metabox);
+  var $all = $('#mmdimo-charity-select-all', metabox);
+  var $single = $('#mmdimo-charity-select-single', metabox);
+  var $charitySelect = $('#mmdimo-charity-single-select', metabox);
+  var $charityMeta = $('#mmdimo-charity-metadata', metabox);
+  var $charityName = $charity.after('<input type="text" id="mmdimo-charity-name" size="40">').next('#mmdimo-charity-name');
+  var $charityActive = $charity.after('<a id="mmdimo-charity-active" title="Select another charity"></a>').next('#mmdimo-charity-active').hide();
+  var $charityClear = $charityActive.after('<a id="mmdimo-charity-clear" title="Clear selected charity">Remove</a>').next('#mmdimo-charity-clear').hide();
+  var options, engine, dataset;
 
   if ($charity.length && $charityName.length) {
     $charity.hide();

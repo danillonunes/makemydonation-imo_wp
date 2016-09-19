@@ -10,11 +10,11 @@
   <input value="1" type="checkbox" name="mmdimo_case_create" id="mmdimo-case-create" <?php if ( $mmdimo_case_checked ) { echo 'checked="checked"'; } ?>> <?php _e( 'Allow Memorial Donations', 'mmdimo' ) ?>
 </label>
 <div class="case-data">
-  <div class="mmdimo-field-family-email">
+
+  <div class="mmdimo-field-family-emails">
     <p>
-      <label for="mmdimo-family-email">Family email</label>
-      <br>
-      <input type="text" id="mmdimo-family-email" name="mmdimo_family_email" size="30" value="<?php echo $mmdimo_family_email; ?>">
+      <label for="mmdimo-family-emails"><?php _e( 'Family emails' ); ?></label>
+      <input type="text" id="mmdimo-family-emails" name="mmdimo_family_emails" size="30" value="<?php echo $mmdimo_family_emails; ?>">
     </p>
   </div>
 
@@ -26,15 +26,15 @@
 
   <div class="mmdimo-field-charity">
     <p>
-      <label for="mmdimo-charity">Charity</label>
+      <label for="mmdimo-charity"><?php _e( 'Charity' ); ?></label>
       <div id="mmdimo-charity-select">
         <label class="mmdimo-charity-select-all">
           <input type="radio" name="mmdimo_charity_select" id="mmdimo-charity-select-all" value="all" <?php if (!$mmdimo_charity): ?>checked="checked"<?php endif; ?>>
-          Allow donations to any charity
+          <?php _e( 'Allow donations to any charity' ); ?>
         </label>
         <label class="mmdimo-charity-select-single">
           <input type="radio" name="mmdimo_charity_select" id="mmdimo-charity-select-single" value="single" <?php if ($mmdimo_charity): ?>checked="checked"<?php endif; ?>>
-          Select a single charity
+          <?php _e( 'Allow donations to selected charities only' ); ?>
         </label>
       </div>
 

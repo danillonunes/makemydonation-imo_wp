@@ -79,6 +79,8 @@ function mmdimo_admin_scripts( $hook ) {
     case 'post.php':
     case 'post-new.php':
       wp_enqueue_script( 'mmdimo-typeahead', plugin_dir_url( __FILE__ ) . 'lib/typeahead.bundle.min.js' );
+      wp_enqueue_script( 'mmdimo-selectize.js', plugin_dir_url( __FILE__ ) . 'lib/selectize.js-0.12.3/dist/js/standalone/selectize.min.js' );
+      wp_enqueue_style( 'mmdimo-selectize.css', plugin_dir_url( __FILE__ ) . 'lib/selectize.js-0.12.3/dist/css/selectize.default.css' );
       wp_enqueue_script( 'mmdimo-edit-form', plugin_dir_url( __FILE__ ) . 'js/mmdimo.edit-form.js' );
       wp_enqueue_style( 'mmdimo-edit-form', plugin_dir_url( __FILE__ ) . 'css/mmdimo.edit-form.css' );
       break;
@@ -99,7 +101,10 @@ function mmdimo_add_meta_box() {
 
 function mmdimo_meta_box_callback( $post ) {
   $mmdimo_case = get_post_meta( $post->ID, 'mmdimo_case', TRUE );
-  $mmdimo_family_email = isset( $mmdimo_case['family_email'] ) ? $mmdimo_case['family_email'] : '';
+  $mmdimo_family_emails = isset( $mmdimo_case['family_email'] ) ? $mmdimo_case['family_email'] : isset( $mmdimo_case['family_emails'] ) ? $mmdimo_case['family_emails'] : '';
+  if (is_array($mmdimo_family_emails)) {
+    $mmdimo_family_emails = implode(',', $mmdimo_family_emails);
+  }
 
   $mmdimo_case_checked = TRUE;
   if ( isset( $mmdimo_case ) && $mmdimo_case ) {
@@ -144,7 +149,7 @@ function mmdimo_meta_box_save( $post_id, $post, $update ) {
   }
   $new_case = array(
     'name' => $post->post_title,
-    'family_email' => $_POST['mmdimo_family_email'],
+    'family_emails' => explode(',', $_POST['mmdimo_family_emails']),
     'family_notify' => isset( $_POST['mmdimo_family_notify'] ) && $_POST['mmdimo_family_notify'] ? '1' : '0',
     'charity' => $_POST['mmdimo_charity'],
     'status' => 1,

@@ -104,7 +104,7 @@ function mmdimo_api_case_create( $case ) {
     $default_values = array(
       'funeral_home' => get_option('mmdimo_fhid'),
       'internal_id' => '',
-      'family_email' => '',
+      'family_emails' => array(),
       'family_notify' => '0',
       'charity' => '',
     );
@@ -136,7 +136,7 @@ function mmdimo_api_case_update( $case ) {
     $default_values = array(
       'funeral_home' => get_option('mmdimo_fhid'),
       'internal_id' => '',
-      'family_email' => '',
+      'family_emails' => array(),
       'family_notify' => '0',
       'charity' => '',
     );
