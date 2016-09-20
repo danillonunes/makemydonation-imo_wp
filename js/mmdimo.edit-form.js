@@ -42,6 +42,8 @@ $metabox.each(function() {
       }
     })
     .trigger('change');
+
+    $('<style type="text/css">.selectize-control.multi .selectize-input [data-value], .selectize-control.multi .selectize-input .active[data-value] { background-color: ' + _wpColorScheme.icons.base + '; } </style>').appendTo($family);
 });
 
 $('#mmdimo_meta_box').each(function() {
