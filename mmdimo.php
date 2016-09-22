@@ -103,7 +103,7 @@ function mmdimo_meta_box_callback( $post ) {
   $mmdimo_case = get_post_meta( $post->ID, 'mmdimo_case', TRUE );
   $mmdimo_family_emails = isset( $mmdimo_case['family_email'] ) ? $mmdimo_case['family_email'] : isset( $mmdimo_case['family_emails'] ) ? $mmdimo_case['family_emails'] : '';
   if (is_array($mmdimo_family_emails)) {
-    $mmdimo_family_emails = implode(',', $mmdimo_family_emails);
+    $mmdimo_family_emails = implode( ',', $mmdimo_family_emails );
   }
 
   $mmdimo_case_checked = TRUE;
@@ -121,10 +121,14 @@ function mmdimo_meta_box_callback( $post ) {
 
   $mmdimo_default_state = get_option( 'mmdimo_default_state' );
   if ( isset( $mmdimo_charity_metadata ) ) {
-    $mmdimo_charity_metadata_obj = json_decode( $mmdimo_charity_metadata );
-    if ( isset( $mmdimo_charity_metadata_obj->state ) && $mmdimo_charity_metadata_obj->state ) {
-      $mmdimo_default_state = $mmdimo_charity_metadata_obj->state;
+    $mmdimo_charity_metadata_array = json_decode( $mmdimo_charity_metadata, TRUE );
+    if ( isset( $mmdimo_charity_metadata_array['charity'] ) ) {
+      $mmdimo_charity_metadata_array = array(
+        $mmdimo_charity_metadata_array['charity']['ein'] => $mmdimo_charity_metadata_array
+      );
     }
+    $mmdimo_charity = implode( ',', array_keys( $mmdimo_charity_metadata_array ) );
+    $mmdimo_charity_metadata = json_encode( $mmdimo_charity_metadata_array );
   }
 
   include( MMDIMO_PLUGIN_DIR . '/metabox.php' );
@@ -149,9 +153,11 @@ function mmdimo_meta_box_save( $post_id, $post, $update ) {
   }
   $new_case = array(
     'name' => $post->post_title,
+    'family_email' => '',
     'family_emails' => explode(',', $_POST['mmdimo_family_emails']),
     'family_notify' => isset( $_POST['mmdimo_family_notify'] ) && $_POST['mmdimo_family_notify'] ? '1' : '0',
-    'charity' => $_POST['mmdimo_charity'],
+    'charity' => '',
+    'charities' => $_POST['mmdimo_charity_select'] == 'select' ? explode(',', $_POST['mmdimo_charities']) : array(),
     'status' => 1,
   );
   $case = array_merge($current_case, $new_case);

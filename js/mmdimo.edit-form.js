@@ -51,34 +51,62 @@ $('#mmdimo_meta_box').each(function() {
   var $create = $('#mmdimo-case-create', metabox);
   var $data = $('.case-data', metabox);
   var $state = $('#mmdimo-charity-state', metabox);
-  var $charity = $('#mmdimo-charity', metabox);
+  var $charities = $('#mmdimo-charities', metabox);
   var $select = $('#mmdimo-charity-select input', metabox);
   var $all = $('#mmdimo-charity-select-all', metabox);
-  var $single = $('#mmdimo-charity-select-single', metabox);
-  var $charitySelect = $('#mmdimo-charity-single-select', metabox);
+  var $single = $('#mmdimo-charity-select-select', metabox);
+  var $charitySelect = $('#mmdimo-charity-selection', metabox);
   var $charityMeta = $('#mmdimo-charity-metadata', metabox);
-  var $charityName = $charity.after('<input type="text" id="mmdimo-charity-name" size="40">').next('#mmdimo-charity-name');
-  var $charityActive = $charity.after('<a id="mmdimo-charity-active" title="Select another charity"></a>').next('#mmdimo-charity-active').hide();
-  var $charityClear = $charityActive.after('<a id="mmdimo-charity-clear" title="Clear selected charity">Remove</a>').next('#mmdimo-charity-clear').hide();
+  var $charityName = $charities.after('<input type="text" id="mmdimo-charity-name" size="40">').next('#mmdimo-charity-name');
+  var $charityActive = $state.before('<ul id="mmdimo-charity-active" class="mmdimo-empty"></ul>').prev('#mmdimo-charity-active');
+  var metadata = {};
   var options, engine, dataset;
 
-  if ($charity.length && $charityName.length) {
-    $charity.hide();
+  if ($charities.length && $charityName.length) {
+    $charities
+      .hide()
+      .on('mmdimo:add', function(e, charity) {
+        metadata[charity.ein] = {
+          charity: charity
+        };
+        $charities.trigger('mmdimo:reval');
+
+        $charityActive
+          .removeClass('mmdimo-empty')
+          .append('<li id="mmdimo-charity-active-' + charity.ein + '"><strong>' + charity.name + '</strong><br><span>EIN: ' + charity.ein + ' — ' + charity.city + ', ' + charity.state + '</span> <a class="mmdimo-charity-clear" title="Clear selected charity">Remove</a></li>');
+      })
+      .on('mmdimo:remove', function(e, ein) {
+        delete metadata[ein];
+        $charities.trigger('mmdimo:reval');
+
+        $charityActive.find('#mmdimo-charity-active-' + ein)
+          .remove();
+
+        if (!$charityActive.children('li').length) {
+          $charityActive.addClass('mmdimo-empty');
+        }
+      })
+      .on('mmdimo:reval', function() {
+        $charities.val(Object.keys(metadata).join(','));
+        $charityMeta.val(JSON.stringify(metadata));
+      });
 
     $charityName
       .attr('autocomplete', 'OFF')
       .attr('aria-autocomplete', 'list');
 
-    $state.bind('change', function() {
-      var st = $(this).val();
-      var state = '';
+    $state
+      .bind('change', function() {
+        var st = $(this).val();
+        var state = '';
 
-      if (st) {
-        state = $state.find('option[value="' + $(this).val() + '"]').text() + ' ';
-      }
+        if (st) {
+          state = $state.find('option[value="' + $(this).val() + '"]').text() + ' ';
+        }
 
-      $charityName.attr('placeholder', 'Search all ' + state + 'charities');
-    }).trigger('change');
+        $charityName.attr('placeholder', 'Search all ' + state + 'charities');
+      })
+      .trigger('change');
 
     engine = new Bloodhound({
       identify: function(o) { return o.id_str; },
@@ -136,53 +164,26 @@ $('#mmdimo_meta_box').each(function() {
     $charityName
       .typeahead(options, dataset)
       .bind('typeahead:select', function(event, suggestion) {
-        var metadata = {
-          state: $state.val(),
-          charity: suggestion,
-        };
+        $charities.trigger('mmdimo:add', suggestion);
 
-        $charityActive
-          .html('<strong>' + suggestion.name + '</strong><br><span>EIN: ' + suggestion.ein + ' — ' + suggestion.city + ', ' + suggestion.state + '</span>')
-          .show();
-        $charityClear.show();
-        $charity.val(suggestion.ein);
-
-        $charityMeta.val(JSON.stringify(metadata));
-
-        $('.twitter-typeahead', metabox).hide();
-        $state.hide();
-        $charityName.hide();
+        $charityName
+          .typeahead('close')
+          .typeahead('val', '');
       });
 
     if ($charityMeta.val()) {
-      var metadata = $.parseJSON($charityMeta.val());
-      var suggestion = metadata.charity;
+      var defaultMetadata = $.parseJSON($charityMeta.val());
+      if (typeof defaultMetadata.charity != 'undefined') {
+        metadata[defaultMetadata.charity.ein] = defaultMetadata;
+      }
+      else {
+        metadata = defaultMetadata;
+      }
 
-      $charityActive
-        .html('<strong>' + suggestion.name + '</strong><br><span>EIN: ' + suggestion.ein + ' — ' + suggestion.city + ', ' + suggestion.state + '</span>')
-        .show();
-      $charityClear.show();
-
-      $state.val(metadata.state);
-      $charityName.val(suggestion.name);
-
-      $('.twitter-typeahead', metabox).hide();
-      $state.hide();
-      $charityName.hide();
+      $.each(metadata, function(ein, option) {
+        $charities.trigger('mmdimo:add', option.charity);
+      });
     }
-
-    $charityActive.bind('click', function(event) {
-      $charityActive.hide();
-      $charityClear.hide();
-      $('.twitter-typeahead', metabox).show();
-      $state.show();
-      $charityName.show().focus();
-      $charity.val('');
-      $charityMeta.val('');
-
-      event.stopPropagation();
-      return false;
-    });
 
     $select
       .bind('change', function() {
@@ -190,16 +191,17 @@ $('#mmdimo_meta_box').each(function() {
           $charitySelect.show();
         }
         else {
-          $charityClear.trigger('click');
-          $charitySelect.hide();
+         $charitySelect.hide();
         }
       })
       .trigger('change');
 
-    $charityClear.bind('click', function() {
-      $charityActive.trigger('click');
-      $charityName.val('').blur();
-    });
+    $charityActive
+      .on('click', '.mmdimo-charity-clear', function() {
+        var ein = $(this).parent('li').attr('id').match(/\d+/)[0];
+
+        $charities.trigger('mmdimo:remove', ein);
+      });
   }
 });
 

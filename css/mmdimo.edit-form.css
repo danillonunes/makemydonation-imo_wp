@@ -25,11 +25,27 @@
   border: 1px solid #ddd;
   border-radius: 5px;
   color: inherit;
-  cursor: pointer;
   display: block;
-  float: left;
-  padding: 5px 30px 5px 10px;
+  margin-top: 0;
+  padding: 10px 5px;
   text-decoration: none;
+}
+#mmdimo-charity-active.mmdimo-empty {
+  display: none;
+}
+#mmdimo-charity-active li {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  margin: 0;
+  margin-top: 10px;
+  padding-left: 5px;
+  padding-right: 30px;
+  padding-top: 10px;
+  position: relative;
+}
+#mmdimo-charity-active li:first-child {
+  border-width: 0;
+  margin-top: 0;
+  padding-top: 0;
 }
 #mmdimo-charity-select label {
   display: block;
@@ -38,18 +54,21 @@
 #mmdimo-charity-single-select {
   padding: 1px 0;
 }
-#mmdimo-charity-clear {
+.mmdimo-charity-clear {
   color: inherit;
   cursor: pointer;
-  float: left;
   height: 20px;
-  margin-left: -20px;
   overflow: hidden;
   text-indent: 100%;
-  position: relative;
+  position: absolute;
+  right: 0;
+  top: 5px;
   width: 20px;
 }
-#mmdimo-charity-clear::before {
+#mmdimo-charity-active li:first-child .mmdimo-charity-clear {
+  top: -5px;
+}
+.mmdimo-charity-clear::before {
   border: 1px solid #ddd;
   border-radius: 4px;
   content: "\00d7";
@@ -63,13 +82,12 @@
   width: 18px;
   z-index: 1000;
 }
-#mmdimo-charity-clear:hover {
-}
-#mmdimo-charity-clear:hover::before {
+.mmdimo-charity-clear:hover::before {
   background-color: #efefef;
   border-style: solid;
 }
 #mmdimo-charity-state {
+  clear: left;
   margin-right: 10px;
 }
 #mmdimo-charity-state,
