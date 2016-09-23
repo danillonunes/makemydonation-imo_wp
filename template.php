@@ -1,7 +1,7 @@
 <?php
 
-function the_mmdimo_donation_link( $before = '', $after = '', $echo = true, $content = NULL, $title = NULL, $target = NULL ) {
-  $donation_link = get_the_mmdimo_donation_link(0, $content, $title, $target);
+function the_mmdimo_donation_link( $before = '', $after = '', $echo = true, $content = NULL, $title = NULL, $target = NULL, $ein = NULL ) {
+  $donation_link = get_the_mmdimo_donation_link(0, $content, $title, $target, $ein);
 
   if ( strlen($donation_link) == 0 ) {
     return;
@@ -17,8 +17,8 @@ function the_mmdimo_donation_link( $before = '', $after = '', $echo = true, $con
   }
 }
 
-function get_the_mmdimo_donation_link( $post = 0, $content = NULL, $title = NULL, $target = NULL ) {
-  $url = get_the_mmdimo_donation_url( $post );
+function get_the_mmdimo_donation_link( $post = 0, $content = NULL, $title = NULL, $target = NULL, $ein = NULL ) {
+  $url = get_the_mmdimo_donation_url( $post, $ein );
   $post = get_post( $post );
 
   if ( is_null($content) ) {
@@ -48,16 +48,17 @@ function get_the_mmdimo_donation_link( $post = 0, $content = NULL, $title = NULL
 function shortcode_mmdimo_donation_link( $attr = array(), $content = NULL ) {
   $title = isset($attr['title'] ) ? $attr['title'] : NULL;
   $target = isset($attr['target'] ) ? $attr['target'] : NULL;
+  $ein = isset($attr['ein'] ) ? $attr['ein'] : NULL;
 
   if (!$content) {
     $content = NULL;
   }
 
-  return get_the_mmdimo_donation_link(0, $content, $title, $target);
+  return get_the_mmdimo_donation_link(0, $content, $title, $target, $ein);
 }
 
-function the_mmdimo_donation_url( $before = '', $after = '', $echo = true ) {
-  $donation_url = get_the_mmdimo_donation_url();
+function the_mmdimo_donation_url( $before = '', $after = '', $echo = true, $ein = NULL ) {
+  $donation_url = get_the_mmdimo_donation_url( 0, $ein );
 
   if ( strlen($donation_url) == 0 ) {
     return;
@@ -73,7 +74,7 @@ function the_mmdimo_donation_url( $before = '', $after = '', $echo = true ) {
   }
 }
 
-function get_the_mmdimo_donation_url( $post = 0 ) {
+function get_the_mmdimo_donation_url( $post = 0, $ein = NULL ) {
   $post = get_post( $post );
   $id = isset( $post->ID ) ? $post->ID : 0;
   $mmdimo_case = get_post_meta( $id, 'mmdimo_case', TRUE );
@@ -82,7 +83,31 @@ function get_the_mmdimo_donation_url( $post = 0 ) {
   }
 
   if ( isset( $mmdimo_case['url'] ) && $mmdimo_case['url'] ) {
-    $url = $mmdimo_case['url'] . '?r=' . urlencode( get_permalink( $id ) );
+    $query_strings = array();
+
+    if ( is_numeric( $ein ) ) {
+      $mmdimo_charity = json_decode( get_post_meta( $id, 'mmdimo_charity_metadata', TRUE ), TRUE );
+      $charities = array();
+
+      if ( isset( $mmdimo_charity['charity'] ) && isset( $mmdimo_charity['charity']['ein'] ) ) {
+        $charities[] = $mmdimo_charity['charity']['ein'];
+      }
+      elseif ( !empty( $mmdimo_charity ) ) {
+        foreach ( $mmdimo_charity as $charity ) {
+          if ( isset( $charity['charity'] ) && isset( $charity['charity']['ein'] ) ) {
+            $charities[] = $charity['charity']['ein'];
+          }
+        }
+      }
+
+      if ( in_array( $ein, $charities ) ) {
+        $query_strings[] = 'ein=' . $ein;
+      }
+    }
+
+    $query_strings[] = 'r=' . urlencode( get_permalink( $id ) );
+
+    $url = $mmdimo_case['url'] . '?' . implode( '&', $query_strings );
 
     return apply_filters( 'the_mmdimo_donation_url', $url, $id );
   }
