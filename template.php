@@ -115,13 +115,23 @@ function get_the_mmdimo_donation_charity_name( $post = 0 ) {
   $post = get_post( $post );
   $id = isset( $post->ID ) ? $post->ID : 0;
 
-  $mmdimo_charity = json_decode( get_post_meta( $id, 'mmdimo_charity_metadata', TRUE ) );
+  $mmdimo_charity = json_decode( get_post_meta( $id, 'mmdimo_charity_metadata', TRUE ), TRUE );
+  $charity_name = '';
 
-  if ( isset( $mmdimo_charity->charity ) && isset( $mmdimo_charity->charity->name ) ) {
-    return apply_filters( 'the_mmdimo_donation_charity_name', $mmdimo_charity->charity->name, $id );
+  if ( isset( $mmdimo_charity['charity'] ) && isset( $mmdimo_charity['charity']['name'] ) ) {
+    $charity_name = $mmdimo_charity['charity']['name'];
+  }
+  elseif ( !empty( $mmdimo_charity ) ) {
+    $charities = array();
+    foreach ( $mmdimo_charity as $charity ) {
+      if ( isset( $charity['charity'] ) && isset( $charity['charity']['name'] ) ) {
+        $charities[] = $charity['charity']['name'];
+      }
+    }
+    $charity_name = implode( ', ', $charities );
   }
 
-  return '';
+  return apply_filters( 'the_mmdimo_donation_charity_name', $charity_name, $id );
 }
 
 function shortcode_mmdimo_donation_charity_name() {
@@ -149,13 +159,23 @@ function get_the_mmdimo_donation_charity_ein( $post = 0 ) {
   $post = get_post( $post );
   $id = isset( $post->ID ) ? $post->ID : 0;
 
-  $mmdimo_charity = json_decode( get_post_meta( $id, 'mmdimo_charity_metadata', TRUE ) );
+  $mmdimo_charity = json_decode( get_post_meta( $id, 'mmdimo_charity_metadata', TRUE ), TRUE );
+  $charity_ein = '';
 
-  if ( isset( $mmdimo_charity->charity ) && isset( $mmdimo_charity->charity->ein ) ) {
-    return apply_filters( 'the_mmdimo_donation_charity_ein', $mmdimo_charity->charity->ein, $id );
+  if ( isset( $mmdimo_charity['charity'] ) && isset( $mmdimo_charity['charity']['ein'] ) ) {
+    $charity_ein = $mmdimo_charity['charity']['ein'];
+  }
+  elseif ( !empty( $mmdimo_charity ) ) {
+    $charities = array();
+    foreach ( $mmdimo_charity as $charity ) {
+      if ( isset( $charity['charity'] ) && isset( $charity['charity']['ein'] ) ) {
+        $charities[] = $charity['charity']['ein'];
+      }
+    }
+    $charity_ein = implode( ', ', $charities );
   }
 
-  return '';
+  return apply_filters( 'the_mmdimo_donation_charity_ein', $charity_ein, $id );
 }
 
 function shortcode_mmdimo_donation_charity_ein() {
