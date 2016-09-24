@@ -29,11 +29,11 @@
       <label for="mmdimo-charity"><?php _e( 'Charity' ); ?></label>
       <div id="mmdimo-charity-select">
         <label class="mmdimo-charity-select-all">
-          <input type="radio" name="mmdimo_charity_select" id="mmdimo-charity-select-all" value="all" <?php if (!$mmdimo_charity): ?>checked="checked"<?php endif; ?>>
+          <input type="radio" name="mmdimo_charity_select" id="mmdimo-charity-select-all" value="all" <?php if (!$mmdimo_charities): ?>checked="checked"<?php endif; ?>>
           <?php _e( 'Allow donations to any charity' ); ?>
         </label>
         <label class="mmdimo-charity-select-select">
-          <input type="radio" name="mmdimo_charity_select" id="mmdimo-charity-select-select" value="select" <?php if ($mmdimo_charity): ?>checked="checked"<?php endif; ?>>
+          <input type="radio" name="mmdimo_charity_select" id="mmdimo-charity-select-select" value="select" <?php if ($mmdimo_charities): ?>checked="checked"<?php endif; ?>>
           <?php _e( 'Allow donations to selected charities only' ); ?>
         </label>
       </div>
@@ -93,7 +93,7 @@
           <option value="WI" <?php if ('WI' == $mmdimo_default_state) { echo 'selected="selected"'; } ?>><?php _e('Wisconsin', 'mmdimo'); ?></option>
           <option value="WY" <?php if ('WY' == $mmdimo_default_state) { echo 'selected="selected"'; } ?>><?php _e('Wyoming', 'mmdimo'); ?></option>
         </select>
-        <input type="text" id="mmdimo-charities" name="mmdimo_charities" size="20" value="<?php echo $mmdimo_charity; ?>">
+        <input type="text" id="mmdimo-charities" name="mmdimo_charities" size="20" value="<?php echo $mmdimo_charities; ?>">
         <input type="hidden" id="mmdimo-charity-metadata" name="mmdimo_charity_metadata" value='<?php echo $mmdimo_charity_metadata; ?>'>
         <br>
       </div>

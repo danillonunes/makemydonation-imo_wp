@@ -66,7 +66,7 @@ $('#mmdimo_meta_box').each(function() {
     $charities
       .hide()
       .on('mmdimo:add', function(e, charity) {
-        metadata[charity.ein] = {
+        metadata['charity-ein-' + charity.ein] = {
           charity: charity
         };
         $charities.trigger('mmdimo:reval');
@@ -76,7 +76,7 @@ $('#mmdimo_meta_box').each(function() {
           .append('<li id="mmdimo-charity-active-' + charity.ein + '"><strong>' + charity.name + '</strong><br><span>EIN: ' + charity.ein + ' — ' + charity.city + ', ' + charity.state + '</span> <a class="mmdimo-charity-clear" title="Clear selected charity">Remove</a></li>');
       })
       .on('mmdimo:remove', function(e, ein) {
-        delete metadata[ein];
+        delete metadata['charity-ein-' + ein];
         $charities.trigger('mmdimo:reval');
 
         $charityActive.find('#mmdimo-charity-active-' + ein)
@@ -87,7 +87,7 @@ $('#mmdimo_meta_box').each(function() {
         }
       })
       .on('mmdimo:reval', function() {
-        $charities.val(Object.keys(metadata).join(','));
+        $charities.val(Object.keys(metadata).join(',').replace(/charity-ein-/g, ''));
         $charityMeta.val(JSON.stringify(metadata));
       });
 
@@ -174,10 +174,12 @@ $('#mmdimo_meta_box').each(function() {
     if ($charityMeta.val()) {
       var defaultMetadata = $.parseJSON($charityMeta.val());
       if (typeof defaultMetadata.charity != 'undefined') {
-        metadata[defaultMetadata.charity.ein] = defaultMetadata;
+        metadata['charity-ein-' + defaultMetadata.charity.ein] = defaultMetadata;
       }
       else {
-        metadata = defaultMetadata;
+        $.each(defaultMetadata, function(ein, charity) {
+          metadata[ein] = charity;
+        });
       }
 
       $.each(metadata, function(ein, option) {

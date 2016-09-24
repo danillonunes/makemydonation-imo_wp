@@ -117,17 +117,24 @@ function mmdimo_meta_box_callback( $post ) {
   }
 
   $mmdimo_charity_metadata = get_post_meta( $post->ID, 'mmdimo_charity_metadata', TRUE );
-  $mmdimo_charity = isset( $mmdimo_case['charity'] ) ? $mmdimo_case['charity'] : '';
+  $mmdimo_charities = isset( $mmdimo_case['charity'] ) ? $mmdimo_case['charity'] : '';
+  $mmdimo_charities = isset( $mmdimo_case['charities'] ) ? implode( ',', $mmdimo_case['charities'] ) : $mmdimo_charities;
 
   $mmdimo_default_state = get_option( 'mmdimo_default_state' );
   if ( isset( $mmdimo_charity_metadata ) ) {
     $mmdimo_charity_metadata_array = json_decode( $mmdimo_charity_metadata, TRUE );
     if ( isset( $mmdimo_charity_metadata_array['charity'] ) ) {
       $mmdimo_charity_metadata_array = array(
-        $mmdimo_charity_metadata_array['charity']['ein'] => $mmdimo_charity_metadata_array
+        'charity-ein-' . $mmdimo_charity_metadata_array['charity']['ein'] => $mmdimo_charity_metadata_array
       );
     }
-    $mmdimo_charity = implode( ',', array_keys( $mmdimo_charity_metadata_array ) );
+    else {
+      $mmdimo_charity_metadata_array_sorted = array();
+      foreach ($mmdimo_charity_metadata_array as $ein => $charity) {
+        $mmdimo_charity_metadata_array_sorted['charity-ein-' . $ein] = $charity;
+      }
+      $mmdimo_charity_metadata_array = $mmdimo_charity_metadata_array_sorted;
+    }
     $mmdimo_charity_metadata = json_encode( $mmdimo_charity_metadata_array );
   }
 
@@ -181,7 +188,7 @@ function mmdimo_meta_box_save( $post_id, $post, $update ) {
     }
 
     if ( isset( $_POST['mmdimo_charity_metadata'] ) ) {
-      update_post_meta( $post_id, 'mmdimo_charity_metadata', $_POST['mmdimo_charity_metadata'] );
+      update_post_meta( $post_id, 'mmdimo_charity_metadata', preg_replace( '/charity-ein-/', '', $_POST['mmdimo_charity_metadata'] ) );
     }
   }
   else {
