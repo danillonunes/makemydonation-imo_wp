@@ -6,7 +6,7 @@
 Plugin Name: Make My Donation - In Memory Of
 Plugin URI: https://wordpress.org/plugins/makemydonation-imo
 Description: Integrate your funeral home site with our Make My Donation - In Memory Of Platform and allow donations to over 1.4 million eligible US charities.
-Version: 1.7
+Version: 1.7.1
 Author: Make My Donation
 Author URI: http://makemydonation.org
 License: GPLv2 or later
@@ -75,18 +75,20 @@ function mmdimo_options() {
 }
 
 function mmdimo_admin_scripts( $hook ) {
+  $data = get_plugin_data( __FILE__ );
+
   switch ( $hook ) {
     case 'post.php':
     case 'post-new.php':
-      wp_enqueue_script( 'mmdimo-typeahead', plugin_dir_url( __FILE__ ) . 'lib/typeahead.bundle.min.js' );
-      wp_enqueue_script( 'mmdimo-selectize.js', plugin_dir_url( __FILE__ ) . 'lib/selectize.js-0.12.3/dist/js/standalone/selectize.min.js' );
-      wp_enqueue_style( 'mmdimo-selectize.css', plugin_dir_url( __FILE__ ) . 'lib/selectize.js-0.12.3/dist/css/selectize.default.css' );
-      wp_enqueue_script( 'mmdimo-edit-form', plugin_dir_url( __FILE__ ) . 'js/mmdimo.edit-form.js' );
-      wp_enqueue_style( 'mmdimo-edit-form', plugin_dir_url( __FILE__ ) . 'css/mmdimo.edit-form.css' );
+      wp_enqueue_script( 'mmdimo-typeahead', plugin_dir_url( __FILE__ ) . 'lib/typeahead.bundle.min.js', array(), $data['Version'] );
+      wp_enqueue_script( 'mmdimo-selectize.js', plugin_dir_url( __FILE__ ) . 'lib/selectize.js-0.12.3/dist/js/standalone/selectize.min.js', array(), $data['Version'] );
+      wp_enqueue_style( 'mmdimo-selectize.css', plugin_dir_url( __FILE__ ) . 'lib/selectize.js-0.12.3/dist/css/selectize.default.css', array(), $data['Version'] );
+      wp_enqueue_script( 'mmdimo-edit-form', plugin_dir_url( __FILE__ ) . 'js/mmdimo.edit-form.js', array(), $data['Version'] );
+      wp_enqueue_style( 'mmdimo-edit-form', plugin_dir_url( __FILE__ ) . 'css/mmdimo.edit-form.css', array(), $data['Version'] );
       break;
     case 'settings_page_mmdimo':
-      wp_enqueue_script( 'mmdimo-options-form', plugin_dir_url( __FILE__ ) . 'js/mmdimo.options-form.js' );
-      wp_enqueue_style( 'mmdimo-options-form', plugin_dir_url( __FILE__ ) . 'css/mmdimo.options-form.css' );
+      wp_enqueue_script( 'mmdimo-options-form', plugin_dir_url( __FILE__ ) . 'js/mmdimo.options-form.js', array(), $data['Version'] );
+      wp_enqueue_style( 'mmdimo-options-form', plugin_dir_url( __FILE__ ) . 'css/mmdimo.options-form.css', array(), $data['Version'] );
       break;
   }
 }

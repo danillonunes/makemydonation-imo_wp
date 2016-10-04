@@ -65,19 +65,19 @@ $('#mmdimo_meta_box').each(function() {
   if ($charities.length && $charityName.length) {
     $charities
       .hide()
-      .on('mmdimo:add', function(e, charity) {
+      .on('mmdimo-add', function(e, charity) {
         metadata['charity-ein-' + charity.ein] = {
           charity: charity
         };
-        $charities.trigger('mmdimo:reval');
+        $charities.trigger('mmdimo-reval');
 
         $charityActive
           .removeClass('mmdimo-empty')
           .append('<li id="mmdimo-charity-active-' + charity.ein + '"><strong>' + charity.name + '</strong><br><span>EIN: ' + charity.ein + ' — ' + charity.city + ', ' + charity.state + '</span> <a class="mmdimo-charity-clear" title="Clear selected charity">Remove</a></li>');
       })
-      .on('mmdimo:remove', function(e, ein) {
+      .on('mmdimo-remove', function(e, ein) {
         delete metadata['charity-ein-' + ein];
-        $charities.trigger('mmdimo:reval');
+        $charities.trigger('mmdimo-reval');
 
         $charityActive.find('#mmdimo-charity-active-' + ein)
           .remove();
@@ -86,7 +86,7 @@ $('#mmdimo_meta_box').each(function() {
           $charityActive.addClass('mmdimo-empty');
         }
       })
-      .on('mmdimo:reval', function() {
+      .on('mmdimo-reval', function() {
         $charities.val(Object.keys(metadata).join(',').replace(/charity-ein-/g, ''));
         $charityMeta.val(JSON.stringify(metadata));
       });
@@ -164,7 +164,7 @@ $('#mmdimo_meta_box').each(function() {
     $charityName
       .typeahead(options, dataset)
       .bind('typeahead:select', function(event, suggestion) {
-        $charities.trigger('mmdimo:add', suggestion);
+        $charities.trigger('mmdimo-add', suggestion);
 
         $charityName
           .typeahead('close')
@@ -183,7 +183,7 @@ $('#mmdimo_meta_box').each(function() {
       }
 
       $.each(metadata, function(ein, option) {
-        $charities.trigger('mmdimo:add', option.charity);
+        $charities.trigger('mmdimo-add', option.charity);
       });
     }
 
@@ -202,7 +202,7 @@ $('#mmdimo_meta_box').each(function() {
       .on('click', '.mmdimo-charity-clear', function() {
         var ein = $(this).parent('li').attr('id').match(/\d+/)[0];
 
-        $charities.trigger('mmdimo:remove', ein);
+        $charities.trigger('mmdimo-remove', ein);
       });
   }
 });
