@@ -11,7 +11,7 @@ Integrate your funeral home site with our Make My Donation - In Memory Of Platfo
 
 == Description ==
 
-[Make My Donation – In Memory Of Platform](https://funerals.makemydonation.org) is a FREE service for all funeral homes in United States, instantly provide a donation platform supporting donations to over 1.4 million eligible US based charities.
+[Make My Donation – In Memory Of Platform](http://imo.makemydonation.org) is a FREE service for all funeral homes in United States, instantly provide a donation platform supporting donations to over 1.4 million eligible US based charities.
 
 Now every funeral home in the United States can provide a simple, safe and transparent donation platform for families and loved ones!
 
@@ -23,9 +23,9 @@ For support or more information contact: info@makemydonation.org
 
 The charity search engine is powered by [OrgHunter](http://www.orghunter.com), America’s most trusted charity resource!
 
-For assistance in installing and configuring the Make My Donation plugin, please contact Funeral Futurist Websites who will properly install and configure the plugin for your website for free.  
+For assistance in installing and configuring the Make My Donation plugin, please contact Funeral Futurist Websites who will properly install and configure the plugin for your website for free.
 
-​[​Please complete the form on this page to get started with the installation](​http://bit.ly/2auWlnp)​.
+[Please complete the form on this page to get started with the installation](http://bit.ly/2auWlnp).
 
 == Installation ==
 
