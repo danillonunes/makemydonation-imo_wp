@@ -120,7 +120,7 @@ function mmdimo_meta_box_callback( $post ) {
 
   $mmdimo_charity_metadata = get_post_meta( $post->ID, 'mmdimo_charity_metadata', TRUE );
   $mmdimo_charities = isset( $mmdimo_case['charity'] ) ? $mmdimo_case['charity'] : '';
-  $mmdimo_charities = isset( $mmdimo_case['charities'] ) ? implode( ',', $mmdimo_case['charities'] ) : $mmdimo_charities;
+  $mmdimo_charities = isset( $mmdimo_case['charities'] ) && is_array( $mmdimo_case['charities'] ) ? implode( ',', $mmdimo_case['charities'] ) : $mmdimo_charities;
 
   $mmdimo_default_state = get_option( 'mmdimo_default_state' );
   if ( isset( $mmdimo_charity_metadata ) ) {
@@ -132,6 +132,7 @@ function mmdimo_meta_box_callback( $post ) {
     }
     else {
       $mmdimo_charity_metadata_array_sorted = array();
+      $mmdimo_charity_metadata_array = $mmdimo_charity_metadata_array ? $mmdimo_charity_metadata_array : array();
       foreach ($mmdimo_charity_metadata_array as $ein => $charity) {
         $mmdimo_charity_metadata_array_sorted['charity-ein-' . $ein] = $charity;
       }
