@@ -125,7 +125,9 @@ function mmdimo_meta_box_callback( $post ) {
   $mmdimo_default_state = get_option( 'mmdimo_default_state' );
   if ( isset( $mmdimo_charity_metadata ) ) {
     $mmdimo_charity_metadata_array = json_decode( $mmdimo_charity_metadata, TRUE );
-    $mmdimo_charities = implode(',', array_keys($mmdimo_charity_metadata_array));
+    if ( !empty( $mmdimo_charity_metadata_array ) ) {
+      $mmdimo_charities = implode( ',', array_keys( $mmdimo_charity_metadata_array ) );
+    }
     if ( isset( $mmdimo_charity_metadata_array['charity'] ) ) {
       $mmdimo_charity_metadata_array = array(
         'charity-ein-' . $mmdimo_charity_metadata_array['charity']['ein'] => $mmdimo_charity_metadata_array
