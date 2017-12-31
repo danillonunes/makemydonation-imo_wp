@@ -66,20 +66,25 @@ $('#mmdimo_meta_box').each(function() {
     $charities
       .hide()
       .on('mmdimo-add', function(e, charity) {
-        metadata['charity-ein-' + charity.ein_hash] = {
+        var charity_id = charity.ein_hash || charity.ein;
+        metadata['charity-ein-' + charity_id] = {
           charity: charity
         };
         $charities.trigger('mmdimo-reval');
 
         $charityActive
           .removeClass('mmdimo-empty')
-          .append('<li id="mmdimo-charity-active-' + charity.ein_hash + '"><strong>' + charity.name + '</strong><br><span>EIN: ' + charity.ein + ' — ' + charity.city + ', ' + charity.state + '</span> <a class="mmdimo-charity-clear" title="Clear selected charity">Remove</a></li>');
+          .append('<li id="mmdimo-charity-active-' + charity_id + '"><strong>' + charity.name + '</strong><br><span>EIN: ' + charity.ein + ' — ' + charity.city + ', ' + charity.state + '</span> <a class="mmdimo-charity-clear" title="Clear selected charity">Remove</a></li>');
       })
-      .on('mmdimo-remove', function(e, ein_hash) {
-        delete metadata['charity-ein-' + ein_hash];
+      .on('mmdimo-remove', function(e, charity_id) {
+        var ein = charity_id.substring(0,9);
+        delete metadata['charity-ein-' + ein];
+        delete metadata['charity-ein-' + charity_id];
         $charities.trigger('mmdimo-reval');
 
-        $charityActive.find('#mmdimo-charity-active-' + ein_hash)
+        $charityActive.find('#mmdimo-charity-active-' + ein)
+          .remove();
+        $charityActive.find('#mmdimo-charity-active-' + charity_id)
           .remove();
 
         if (!$charityActive.children('li').length) {
@@ -200,9 +205,9 @@ $('#mmdimo_meta_box').each(function() {
 
     $charityActive
       .on('click', '.mmdimo-charity-clear', function() {
-        var ein_hash = $(this).parent('li').attr('id').match(/\d+-[a-f0-9]+/)[0];
+        var charity_id = $(this).parent('li').attr('id').match(/mmdimo-charity-active-(.*)/)[1];
 
-        $charities.trigger('mmdimo-remove', ein_hash);
+        $charities.trigger('mmdimo-remove', charity_id);
       });
   }
 });
