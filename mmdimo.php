@@ -45,6 +45,7 @@ if ( is_admin() ) {
   add_action( 'admin_notices', 'mmdimo_show_error_message' );
   add_action( 'admin_enqueue_scripts', 'mmdimo_admin_scripts' );
   add_action( 'wp_ajax_mmdimo_load_funeral_homes', 'mmdimo_load_funeral_homes' );
+  add_action( 'wp_ajax_mmdimo_orghunter_csc_ajax', 'mmdimo_orghunter_csc_ajax' );
 }
 
 add_action( 'wp_enqueue_scripts', 'mmdimo_wp_scripts' );
@@ -236,4 +237,43 @@ function mmdimo_load_funeral_homes() {
         die('');
     }
   }
+}
+
+function mmdimo_orghunter_csc_ajax() {
+  require_once( MMDIMO_PLUGIN_DIR . '/api.php' );
+  $path = substr($_SERVER['PHP_SELF'], strlen($_SERVER['SCRIPT_NAME']) + 1);
+  $spath = explode('/', $path);
+  $response = array();
+
+  switch ($spath[0]) {
+    case 'cities':
+      if (strlen($spath[1]) == 2) {
+        $response = mmdimo_api_request( 'get', 'orghunter/data/' . $path );
+      }
+      break;
+    case 'charitysearch':
+    case 'charitysearchalias':
+      $accepted_parameters = array('searchTerm', 'city', 'state');
+      foreach ($accepted_parameters as $accepted_parameter) {
+        if (isset($_GET[$accepted_parameter])) {
+          $parameters[$accepted_parameter] = $_GET[$accepted_parameter];
+        }
+      }
+      $query = http_build_query($parameters);
+      $response = mmdimo_api_request( 'get', 'orghunter/data/' . $path . '?' . $query );
+      break;
+  }
+
+  if (isset($response['response'])) {
+    switch ($response['response']['code']) {
+      case 200:
+        header('Content-Type: application/json');
+        die($response['body']);
+      default:
+        status_header(404);
+        die('');
+    }
+  }
+
+  $response = mmdimo_api_cities_list( $state );
 }
