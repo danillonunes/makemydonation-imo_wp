@@ -81,11 +81,16 @@ function mmdimo_admin_scripts( $hook ) {
   switch ( $hook ) {
     case 'post.php':
     case 'post-new.php':
-      wp_enqueue_script( 'mmdimo-typeahead', plugin_dir_url( __FILE__ ) . 'lib/typeahead.bundle.min.js', array(), $data['Version'] );
       wp_enqueue_script( 'mmdimo-selectize.js', plugin_dir_url( __FILE__ ) . 'lib/selectize.js-0.12.3/dist/js/standalone/selectize.min.js', array(), $data['Version'] );
       wp_enqueue_style( 'mmdimo-selectize.css', plugin_dir_url( __FILE__ ) . 'lib/selectize.js-0.12.3/dist/css/selectize.default.css', array(), $data['Version'] );
       wp_enqueue_script( 'mmdimo-edit-form', plugin_dir_url( __FILE__ ) . 'js/mmdimo.edit-form.js', array(), $data['Version'] );
       wp_enqueue_style( 'mmdimo-edit-form', plugin_dir_url( __FILE__ ) . 'css/mmdimo.edit-form.css', array(), $data['Version'] );
+
+      wp_enqueue_script( 'mmdimo-ohcsc-typeahead.js', plugin_dir_url( __FILE__ ) . 'lib/orghunter-csc/lib/typeahead.js/typeahead.bundle.min.js', array(), $data['Version'] );
+      wp_enqueue_script( 'mmdimo-ohcsc-chosen.js', plugin_dir_url( __FILE__ ) . 'lib/orghunter-csc/lib/chosen/chosen.jquery.min.js', array(), $data['Version'] );
+      wp_enqueue_script( 'mmdimo-ohcsc.js', plugin_dir_url( __FILE__ ) . 'lib/orghunter-csc/js/orghunter.csc.min.js', array(), $data['Version'] );
+      wp_enqueue_style( 'mmdimo-ohcsc-chosen.css', plugin_dir_url( __FILE__ ) . 'lib/orghunter-csc/lib/chosen/chosen.min.css', array(), $data['Version'] );
+      wp_enqueue_style( 'mmdimo-ohcsc.css', plugin_dir_url( __FILE__ ) . 'lib/orghunter-csc/css/orghunter.csc.min.css', array(), $data['Version'] );
       break;
     case 'settings_page_mmdimo':
       wp_enqueue_script( 'mmdimo-options-form', plugin_dir_url( __FILE__ ) . 'js/mmdimo.options-form.js', array(), $data['Version'] );
