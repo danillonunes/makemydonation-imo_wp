@@ -1,0 +1,177 @@
+$highlight-color: #0078c1;
+$gray: #ccc;
+$dark-gray: #aaa;
+$light-gray: #ddd;
+$white: #fff;
+$black: #222;
+
+$text-color: $black;
+
+$field-bg-color: $white;
+$field-border-color: $dark-gray;
+$field-border-radius: 5px;
+$field-font-size: 16px;
+$field-height: 30px;
+$field-spacing: 6px;
+$field-width: 420px;
+$field-autocomplete-color: $dark-gray;
+$field-disabled-color: $gray;
+$field-disabled-border-color: $gray;
+
+$sm-field-font-size: 13px;
+$sm-field-height: 24px;
+
+$suggestion-spacing: 10px;
+$suggestion-border-color: $light-gray;
+
+$field-width-grid: $field-width / 12 - $field-spacing / 6;
+$field-load-width: 16px;
+$field-load-left: $field-width - $field-load-width - $field-spacing;
+$field-load-spacing-right: $field-load-width + $field-spacing;
+
+#ohcsc-w {
+	color: $text-color;
+	font-family: sans-serif;
+}
+#ohcsc-w::after {
+	content: ' ';
+	clear: both;
+	display: block;
+}
+#ohcsc-w .ohcsc-f-w {
+	float: left;
+	margin: 5px $field-spacing;
+}
+#ohcsc-w .ohcsc-f {
+	background-color: $field-bg-color;
+	box-sizing: border-box;
+	border: 1px solid $field-border-color;
+	border-radius: $field-border-radius;
+	color: $text-color;
+	font-size: $field-font-size;
+	line-height: $field-height;
+	height: $field-height;
+	margin: 0;
+	padding: 0 5px;
+}
+#ohcsc-w .ohcsc-f:focus {
+	box-shadow: none;
+	outline: none;
+}
+#ohcsc-w.ohcsc-w-sm .ohcsc-f {
+	font-size: $sm-field-font-size;
+	height: $sm-field-height;
+}
+#ohcsc-w .ohcsc-f:disabled {
+	border-color: $field-disabled-border-color;
+	color: $field-disabled-color;
+}
+#ohcsc-w .ohcsc-f:focus {
+	border-color: $highlight-color;
+}
+
+#ohcsc-state {
+	width: $field-width-grid * 4;
+}
+#ohcsc-city {
+	width: $field-width-grid * 8;
+}
+#ohcsc-term-w {
+	clear: both;
+	display: block;
+}
+#ohcsc-term-w,
+#ohcsc-term {
+	width: $field-width;
+}
+#ohcsc-term-w.load #ohcsc-term {
+	background: $field-load-left center no-repeat;
+	background-image: url('../img/load-f.gif');
+}
+
+/**
+ * Fix Typeahead vertical align.
+ */
+#ohcsc-w .tt-input {
+	vertical-align: baseline !important;
+}
+
+/**
+ * On city field we only use Typeahead autocomplete.
+ */
+#ohcsc-city-w .tt-menu {
+  display: none !important;
+}
+#ohcsc-city-w .tt-hint {
+  border: 1px solid transparent;
+  color: $field-autocomplete-color;
+  font-size: $field-font-size;
+}
+
+/**
+ * Override Typeahead styles.
+ */
+#ohcsc-term-w .twitter-typeahead {
+	display: block !important;
+}
+#ohcsc-term-w .twitter-typeahead .tt-hint {
+	display: none;
+}
+#ohcsc-term-w .twitter-typeahead .tt-menu {
+	background-color: $field-bg-color;
+	border: 1px solid $highlight-color;
+	border-top-width: 0;
+	border-radius: 0 0 $field-border-radius $field-border-radius;
+	margin-top: -5px;
+	padding-top: 5px;
+	right: 0;
+}
+#ohcsc-term-w .twitter-typeahead .tt-suggestion {
+	border-top: 1px solid $suggestion-border-color;
+	cursor: pointer;
+	padding: $suggestion-spacing;
+}
+#ohcsc-term-w .twitter-typeahead .tt-suggestion:hover,
+#ohcsc-term-w .twitter-typeahead .tt-suggestion:active,
+#ohcsc-term-w .twitter-typeahead .tt-cursor {
+	background-color: $highlight-color;
+	color: #fff;
+}
+
+/**
+ * Reset Chosen.
+ */
+#ohcsc-w .chosen-single {
+	background-image: none;
+	border-color: $field-border-color;
+	box-shadow: none;
+	height: $field-height;
+	line-height: $field-height;
+}
+#ohcsc-w.ohcsc-w-sm .chosen-single {
+	height: $sm-field-height;
+	line-height: $sm-field-height;
+}
+#ohcsc-w .chosen-container-active .chosen-single,
+#ohcsc-w .chosen-container-active .chosen-drop {
+	border-color: $highlight-color;
+}
+#ohcsc-w .highlighted {
+	background-color: $highlight-color;
+	background-image: none;
+}
+#ohcsc-w .chosen-single div b {
+	background-position: 0 -6px;
+	height: 8px;
+	margin-top: ($field-height / 2) - (6px / 2);
+}
+#ohcsc-w.ohcsc-w-sm .chosen-single div b {
+	margin-top: ($sm-field-height / 2) - (6px / 2);
+}
+#ohcsc-w .chosen-with-drop .chosen-single div b {
+	background-position: -18px -6px;
+}
+#ohcsc-w .chosen-drop {
+	box-shadow: none;
+	border-color: $field-border-color;
+}
