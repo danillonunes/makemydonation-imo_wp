@@ -1,4 +1,6 @@
 $highlight-color: #0078c1;
+$submit-color: #008c57;
+$submit-highlight-color: #00a567;
 $gray: #ccc;
 $dark-gray: #aaa;
 $light-gray: #ddd;
@@ -12,22 +14,33 @@ $field-border-color: $dark-gray;
 $field-border-radius: 5px;
 $field-font-size: 16px;
 $field-height: 30px;
+$field-term-font-size: $field-font-size;
+$field-term-height: $field-height;
 $field-spacing: 6px;
 $field-width: 420px;
 $field-autocomplete-color: $dark-gray;
 $field-disabled-color: $gray;
 $field-disabled-border-color: $gray;
+$submit-border-radius: $field-border-radius - 1px;
+$submit-height: $field-term-height - 2px;
+$submit-width: 36px;
+
+$wide-field-width: 480px;
 
 $sm-field-font-size: 13px;
 $sm-field-height: 24px;
 
-$suggestion-spacing: 10px;
+$suggestion-spacing-v: 5px;
+$suggestion-spacing-h: 10px;
 $suggestion-border-color: $light-gray;
 
 $field-width-grid: $field-width / 12 - $field-spacing / 6;
 $field-load-width: 16px;
 $field-load-left: $field-width - $field-load-width - $field-spacing;
 $field-load-spacing-right: $field-load-width + $field-spacing;
+
+$wide-field-width-grid: $wide-field-width / 12 - $field-spacing / 6;
+$wide-field-load-left: $wide-field-width - $field-load-width - $field-spacing;
 
 #ohcsc-w {
 	color: $text-color;
@@ -39,8 +52,19 @@ $field-load-spacing-right: $field-load-width + $field-spacing;
 	display: block;
 }
 #ohcsc-w .ohcsc-f-w {
-	float: left;
 	margin: 5px $field-spacing;
+}
+#ohcsc-w .ohcsc-f {
+	width: 100%;
+}
+@media screen and (min-width: 520px) {
+	#ohcsc-w .ohcsc-f-w {
+		float: left;
+	}
+	#ohcsc-w .ohcsc-f {
+		margin-left: 0;
+		margin-right: 0;
+	}
 }
 #ohcsc-w .ohcsc-f {
 	background-color: $field-bg-color;
@@ -70,23 +94,65 @@ $field-load-spacing-right: $field-load-width + $field-spacing;
 	border-color: $highlight-color;
 }
 
-#ohcsc-state {
-	width: $field-width-grid * 4;
-}
-#ohcsc-city {
-	width: $field-width-grid * 8;
-}
 #ohcsc-term-w {
 	clear: both;
 	display: block;
+	position: relative;
 }
-#ohcsc-term-w,
-#ohcsc-term {
-	width: $field-width;
+@media screen and (min-width: 520px) {
+	#ohcsc-w {
+		#ohcsc-state {
+			width: $field-width-grid * 4;
+		}
+		#ohcsc-city {
+			width: $field-width-grid * 8;
+		}
+		#ohcsc-term-w,
+		#ohcsc-term {
+			width: $field-width;
+		}
+		&.ohcsc-w-width-wide {
+			#ohcsc-state {
+				width: $wide-field-width-grid * 4;
+			}
+			#ohcsc-city {
+				width: $wide-field-width-grid * 8;
+			}
+			#ohcsc-term-w,
+			#ohcsc-term {
+				width: $wide-field-width;
+			}
+		}
+	}
 }
-#ohcsc-term-w.load #ohcsc-term {
+#ohcsc-w.has-load #ohcsc-term-w.load #ohcsc-term {
 	background: $field-load-left center no-repeat;
 	background-image: url('../img/load-f.gif');
+}
+#ohcsc-w.ohcsc-w-width-wide #ohcsc-w.has-load #ohcsc-term-w.load #ohcsc-term {
+	background: $field-load-left center no-repeat;
+}
+
+#ohcsc-submit {
+	background: $submit-color url('../img/search.png') center center no-repeat;
+	border: 0;
+	border-radius: 0 $submit-border-radius $submit-border-radius 0;
+	color: $white;
+	cursor: pointer;
+	height: $submit-height;
+	line-height: $submit-height;
+	position: absolute;
+	right: 1px;
+	top: 1px;
+	text-indent: -99999px;
+	width: $submit-width;
+	z-index: 500;
+}
+#ohcsc-submit:hover {
+	background-color: $submit-highlight-color;
+}
+#ohcsc-term-w .tt-open + #ohcsc-submit {
+	border-radius: 0 $submit-border-radius 0 0;
 }
 
 /**
@@ -111,6 +177,7 @@ $field-load-spacing-right: $field-load-width + $field-spacing;
 /**
  * Override Typeahead styles.
  */
+#ohcsc-city-w .twitter-typeahead,
 #ohcsc-term-w .twitter-typeahead {
 	display: block !important;
 }
@@ -123,19 +190,25 @@ $field-load-spacing-right: $field-load-width + $field-spacing;
 	border-top-width: 0;
 	border-radius: 0 0 $field-border-radius $field-border-radius;
 	margin-top: -5px;
-	padding-top: 5px;
+	padding-top: 4px;
 	right: 0;
 }
 #ohcsc-term-w .twitter-typeahead .tt-suggestion {
 	border-top: 1px solid $suggestion-border-color;
 	cursor: pointer;
-	padding: $suggestion-spacing;
+	padding: $suggestion-spacing-v $suggestion-spacing-h;
+}
+#ohcsc-term-w .twitter-typeahead .tt-suggestion em,
+#ohcsc-term-w .twitter-typeahead .tt-suggestion small {
+	display: block;
+	font-style: normal;
 }
 #ohcsc-term-w .twitter-typeahead .tt-suggestion:hover,
 #ohcsc-term-w .twitter-typeahead .tt-suggestion:active,
 #ohcsc-term-w .twitter-typeahead .tt-cursor {
 	background-color: $highlight-color;
-	color: #fff;
+	border-top-color: $highlight-color;
+	color: $white;
 }
 
 /**
