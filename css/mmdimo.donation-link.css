@@ -1,3 +1,51 @@
 .mmdimo-donation-url {
   display: none;
 }
+.mmdimo-donations-list {
+  overflow: hidden;
+}
+.mmdimo-donations-list h3 {
+  font-size: 1.2em;
+  margin: 1em 0;
+}
+.mmdimo-donations-list ul,
+.mmdimo-donations-list li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.mmdimo-donations-list li {
+  margin-bottom: 1em;
+  overflow: hidden;
+}
+.mmdimo-donations-list dt,
+.mmdimo-donations-list dd {
+  clear: left;
+  float: left;
+  font-weight: normal;
+  line-height: 1.5em;
+  margin: 0;
+  padding: 0;
+}
+.mmdimo-donations-list dt {
+  display: none;
+  margin-right: 0.5em;
+}
+.mmdimo-donations-list dd {
+  display: block;
+}
+dd.mmdimo-donations-list-donor-name,
+dd.mmdimo-donations-list-amount {
+  font-weight: bold;
+}
+dt.mmdimo-donations-list-program-destination,
+dt.mmdimo-donations-list-dedicate-honoree,
+dt.mmdimo-donations-list-dedicate-deceased {
+  display: block;
+}
+dd.mmdimo-donations-list-program-destination,
+dd.mmdimo-donations-list-dedicate-honoree,
+dd.mmdimo-donations-list-dedicate-deceased {
+  clear: none;
+  font-style: italic;
+}
