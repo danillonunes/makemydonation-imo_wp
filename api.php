@@ -92,6 +92,28 @@ function mmdimo_api_case_load( $case_id ) {
 }
 
 /**
+ * Load donations from a single case using the API.
+ *
+ * @param $case_id
+ *   The case id.
+ * @return
+ *   Array with the donation data as in the API description.
+ */
+function mmdimo_api_case_donations_load( $case_id, $count = FALSE ) {
+  $count = (int) $count;
+  $response = mmdimo_api_request( 'get', "donation?funeral_home_case=$case_id&count=$count" );
+
+  if ( is_array( $response ) && isset( $response['response'] ) ) {
+    switch ($response['response']['code']) {
+      case 200:
+        return (array) json_decode( $response['body'] );
+    }
+  }
+
+  return FALSE;
+}
+
+/**
  * Create a case using the API.
  *
  * @param $case
