@@ -258,7 +258,7 @@ function mmdimo_orghunter_csc_ajax() {
       break;
     case 'charitysearch':
     case 'charitysearchalias':
-      $accepted_parameters = array('searchTerm', 'city', 'state');
+      $accepted_parameters = array('eligible', 'state', 'city', 'searchTerm');
       foreach ($accepted_parameters as $accepted_parameter) {
         if (isset($_GET[$accepted_parameter])) {
           $parameters[$accepted_parameter] = $_GET[$accepted_parameter];
