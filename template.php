@@ -1,7 +1,7 @@
 <?php
 
-function the_mmdimo_donation_link( $before = '', $after = '', $echo = true, $content = NULL, $title = NULL, $target = NULL, $ein = NULL ) {
-  $donation_link = get_the_mmdimo_donation_link(0, $content, $title, $target, $ein);
+function the_mmdimo_donation_link( $before = '', $after = '', $echo = true, $content = NULL, $title = NULL, $target = NULL, $ein = NULL, $display_count = FALSE ) {
+  $donation_link = get_the_mmdimo_donation_link(0, $content, $title, $target, $ein, $display_count);
 
   if ( strlen($donation_link) == 0 ) {
     return;
@@ -17,13 +17,23 @@ function the_mmdimo_donation_link( $before = '', $after = '', $echo = true, $con
   }
 }
 
-function get_the_mmdimo_donation_link( $post = 0, $content = NULL, $title = NULL, $target = NULL, $ein = NULL ) {
+function get_the_mmdimo_donation_link( $post = 0, $content = NULL, $title = NULL, $target = NULL, $ein = NULL, $display_count = FALSE ) {
   $url = get_the_mmdimo_donation_url( $post, $ein );
   $post = get_post( $post );
+  $id = isset( $post->ID ) ? $post->ID : 0;
 
   if ( is_null($content) ) {
     $content = 'Donate';
   }
+
+  if ( $display_count ) {
+    $count = get_the_mmdimo_donations_count( $id );
+
+    if ( $count ) {
+      $content .=  ' (' . $count . ')';
+    }
+  }
+
   if ( is_null($title) ) {
     $title = 'Make My Donation in Memory of ' . $post->post_title;
   }
@@ -49,12 +59,13 @@ function shortcode_mmdimo_donation_link( $attr = array(), $content = NULL ) {
   $title = isset($attr['title'] ) ? $attr['title'] : NULL;
   $target = isset($attr['target'] ) ? $attr['target'] : NULL;
   $ein = isset($attr['ein'] ) ? $attr['ein'] : NULL;
+  $display_count = isset($attr['display_count'] ) && $attr['display_count'] ? TRUE : FALSE;
 
   if (!$content) {
     $content = NULL;
   }
 
-  return get_the_mmdimo_donation_link(0, $content, $title, $target, $ein);
+  return get_the_mmdimo_donation_link(0, $content, $title, $target, $ein, $display_count);
 }
 
 function the_mmdimo_donation_url( $before = '', $after = '', $echo = true, $ein = NULL ) {
@@ -118,6 +129,50 @@ function get_the_mmdimo_donation_url( $post = 0, $ein = NULL ) {
 
 function shortcode_mmdimo_donation_url() {
   return get_the_mmdimo_donation_url();
+}
+
+function the_mmdimo_donations_count( $before = '', $after = '', $echo = true, $content = NULL ) {
+  $donations_count = get_the_mmdimo_donations_count(0, $content);
+
+  if ( strlen($donations_count) == 0 ) {
+    return;
+  }
+
+  $donations_count = $before . $donations_count . $after;
+
+  if ( $echo ) {
+    echo $donations_count;
+  }
+  else {
+    return $donations_count;
+  }
+}
+
+function get_the_mmdimo_donations_count( $post = 0, $content = NULL ) {
+  $post = get_post( $post );
+  $id = isset( $post->ID ) ? $post->ID : 0;
+  $mmdimo_case = get_post_meta( $id, 'mmdimo_case', TRUE );
+
+  require_once( MMDIMO_PLUGIN_DIR . '/api.php' );
+  $donations_count = mmdimo_api_case_donations_load($mmdimo_case['id'], TRUE);
+
+  if ( $post->ID && $donations_count['total'] ) {
+    $count =  sprintf(_n( '%s donation', '%s donations', $donations_count['total'], 'mmdimo' ), $donations_count['total']);
+
+    $content = '<span class="mmdimo-donation-count">' . $count . '</span>';
+
+    return apply_filters( 'get_the_mmdimo_donations_count', $content, $post, $donations_count );
+  }
+
+  return '';
+}
+
+function shortcode_mmdimo_donations_count( $content = NULL ) {
+  if (!$content) {
+    $content = NULL;
+  }
+
+  return get_the_mmdimo_donations_count(0, $content);
 }
 
 function the_mmdimo_donation_charity_name( $before = '', $after = '', $echo = TRUE ) {
