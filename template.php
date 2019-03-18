@@ -175,6 +175,107 @@ function shortcode_mmdimo_donations_count( $content = NULL ) {
   return get_the_mmdimo_donations_count(0, $content);
 }
 
+function the_mmdimo_donations_list( $before = '', $after = '', $echo = true, $content = NULL ) {
+  $donations = get_the_mmdimo_donations_list(0, $content);
+
+  if ( strlen($donations) == 0 ) {
+    return;
+  }
+
+  $donations = $before . $donations . $after;
+
+  if ( $echo ) {
+    echo $donations;
+  }
+  else {
+    return $donations;
+  }
+}
+
+function get_the_mmdimo_donations_list( $post = 0, $content = NULL, $display_amount = FALSE, $display_charity = TRUE, $display_donor_name = TRUE, $display_destination = TRUE, $display_honoree = FALSE, $display_deceased = FALSE, $display_total_amount = FALSE ) {
+  $post = get_post( $post );
+  $id = isset( $post->ID ) ? $post->ID : 0;
+  $mmdimo_case = get_post_meta( $id, 'mmdimo_case', TRUE );
+
+  require_once( MMDIMO_PLUGIN_DIR . '/api.php' );
+  $donations = mmdimo_api_case_donations_load($mmdimo_case['id']);
+
+  if ( $post->ID && $donations['total'] ) {
+    $list = '<ul class="mmdimo-donations-list">';
+
+    foreach ( $donations['data'] as $donation ) {
+      $item = '<li>';
+
+      $item .= '<dl>';
+
+      if ( $display_amount ) {
+        $item .= '<dt class="mmdimo-donations-list-amount">' . __('Amount:', 'mmdimo') . '</dt>';
+        $item .= '<dd class="mmdimo-donations-list-amount"><span class="mmdimo-donations-list-amount-sep">$</span> <span class="mmdimo-donations-list-amount">' . sprintf('%0.2f', $donation->amount / 100) . '</span></dd>';
+      }
+
+      if ( $display_donor_name ) {
+        $item .= '<dt class="mmdimo-donations-list-donor-name">' . __('Donor:', 'mmdimo') . '</dt>';
+        $item .= '<dd class="mmdimo-donations-list-donor-name"><span class="mmdimo-donations-list-donor-first-name">' . $donation->donor->first_name . '</span> <span class="mmdimo-donations-list-donor-last-name">' . $donation->donor->last_name . '</span></dd>';
+      }
+
+      if ( $display_charity && $donation->charities[0] ) {
+        $item .= '<dt class="mmdimo-donations-list-charity">' . __('Charity:', 'mmdimo') . '</dt>';
+        $item .= '<dd class="mmdimo-donations-list-charity">' . ucwords(strtolower($donation->charities[0]->charityName)) . '</dd>';
+      }
+
+      if ( $display_destination && $donation->program->destination ) {
+        $item .= '<dt class="mmdimo-donations-list-program-destination">' . __('Destination:', 'mmdimo') . '</dt>';
+        $item .= ' <dd class="mmdimo-donations-list-program-destination">' . $donation->program->destination . '</dd> ';
+      }
+
+      if ( $display_honoree && $donation->dedicate->dedicate_honoree ) {
+        $item .= '<dt class="mmdimo-donations-list-dedicate-honoree">' . __('In the name of:', 'mmdimo') . '</dt>';
+        $item .= ' <dd class="mmdimo-donations-list-dedicate-honoree">' . $donation->dedicate->dedicate_honoree . '</dd> ';
+      }
+      if ( $display_deceased && $donation->dedicate->dedicate_deceased ) {
+        $item .= '<dt class="mmdimo-donations-list-dedicate-deceased">' . __('In memory of:', 'mmdimo') . '</dt>';
+        $item .= ' <dd class="mmdimo-donations-list-dedicate-deceased">' . $donation->dedicate->dedicate_deceased . '</dd> ';
+      }
+
+      $item .= '</dl>';
+      $item .= '</li>';
+
+      $item = apply_filters( 'get_the_mmdimo_donations_list_item', $item, $post, $donation );
+
+      $list .= $item;
+    }
+    $list .= '</ul>';
+
+    $total_amount = '';
+    if ($display_total_amount) {
+      $total_amount = '<div class="mmdimo-donations-list-total-amount"><strong>' . __('Total:', 'mmdimo') . '</strong> $' . sprintf('%0.2f', $donations['total_amount'] / 100) . '</div>';
+      $total_amount = apply_filters( 'get_the_mmdimo_donations_list_total_amount', $total_amount, $post, $donations['total_amount'] );
+    }
+
+    $content = '<div class="mmdimo-donations-list"><h3>' . __('Donations', 'mmdimo') . '</h3>' . $total_amount . $content . $list . '</div>';
+
+    return apply_filters( 'get_the_mmdimo_donations_list', $content, $post, $donations );
+  }
+
+  return '';
+}
+
+function shortcode_mmdimo_donations_list( $attr = array(), $content = NULL ) {
+  $display_amount = isset($attr['display_amount'] ) ? $attr['display_amount'] : FALSE;
+  $display_charity = isset($attr['display_charity'] ) ? $attr['display_charity'] : TRUE;
+  $display_donor_name = isset($attr['display_donor_name'] ) ? $attr['display_donor_name'] : TRUE;
+  $display_destination = isset($attr['display_destination'] ) ? $attr['display_destination'] : TRUE;
+  $display_honoree = isset($attr['display_honoree'] ) ? $attr['display_honoree'] : FALSE;
+  $display_deceased = isset($attr['display_deceased'] ) ? $attr['display_deceased'] : FALSE;
+  $display_total_amount = isset($attr['display_total_amount'] ) ? $attr['display_total_amount'] : FALSE;
+
+  if (!$content) {
+    $content = NULL;
+  }
+
+  return get_the_mmdimo_donations_list(0, $content, $display_amount, $display_charity, $display_donor_name, $display_destination, $display_honoree, $display_deceased, $display_total_amount);
+}
+
 function the_mmdimo_donation_charity_name( $before = '', $after = '', $echo = TRUE ) {
   $charity_name = get_the_mmdimo_donation_charity_name();
 

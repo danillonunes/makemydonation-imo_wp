@@ -52,6 +52,7 @@ add_action( 'wp_enqueue_scripts', 'mmdimo_wp_scripts' );
 add_shortcode( 'mmdimo_donation_link', 'shortcode_mmdimo_donation_link' );
 add_shortcode( 'mmdimo_donation_url', 'shortcode_mmdimo_donation_url' );
 add_shortcode( 'mmdimo_donations_count', 'shortcode_mmdimo_donations_count' );
+add_shortcode( 'mmdimo_donations_list', 'shortcode_mmdimo_donations_list' );
 add_shortcode( 'mmdimo_donation_charity:name', 'shortcode_mmdimo_donation_charity_name' );
 add_shortcode( 'mmdimo_donation_charity:ein', 'shortcode_mmdimo_donation_charity_ein' );
 
