@@ -105,9 +105,10 @@ function get_the_mmdimo_donation_url( $post = 0, $ein = NULL ) {
       }
     }
 
+    $case_url = str_replace('http://', 'https://', $mmdimo_case['url']);
     $query_strings[] = 'r=' . urlencode( get_permalink( $id ) );
 
-    $url = $mmdimo_case['url'] . '?' . implode( '&', $query_strings );
+    $url = $case_url . '?' . implode( '&', $query_strings );
 
     return apply_filters( 'the_mmdimo_donation_url', $url, $id );
   }
