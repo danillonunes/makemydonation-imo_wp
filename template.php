@@ -151,10 +151,8 @@ function the_mmdimo_donations_count( $before = '', $after = '', $echo = true, $c
 function get_the_mmdimo_donations_count( $post = 0, $content = NULL ) {
   $post = get_post( $post );
   $id = isset( $post->ID ) ? $post->ID : 0;
-  $mmdimo_case = get_post_meta( $id, 'mmdimo_case', TRUE );
 
-  require_once( MMDIMO_PLUGIN_DIR . '/api.php' );
-  $donations_count = mmdimo_api_case_donations_load($mmdimo_case['id'], TRUE);
+  $donations_count = mmdimo_load_donations_by_post($id, TRUE);
 
   if ( $post->ID && $donations_count['total'] ) {
     $count =  sprintf(_n( '%s donation', '%s donations', $donations_count['total'], 'mmdimo' ), $donations_count['total']);
@@ -195,10 +193,8 @@ function the_mmdimo_donations_list( $before = '', $after = '', $echo = true, $co
 function get_the_mmdimo_donations_list( $post = 0, $content = NULL, $display_attributes = array() ) {
   $post = get_post( $post );
   $id = isset( $post->ID ) ? $post->ID : 0;
-  $mmdimo_case = get_post_meta( $id, 'mmdimo_case', TRUE );
 
-  require_once( MMDIMO_PLUGIN_DIR . '/api.php' );
-  $donations = mmdimo_api_case_donations_load($mmdimo_case['id']);
+  $donations = mmdimo_load_donations_by_post($id);
 
   $default_display_attributes = array(
     'amount' => FALSE,

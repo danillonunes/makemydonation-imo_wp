@@ -246,6 +246,43 @@ function mmdimo_load_funeral_homes() {
   }
 }
 
+function mmdimo_load_donations_by_post( $post_id = 0, $count = FALSE ) {
+  $post = get_post( $post );
+  $id = isset( $post->ID ) ? $post->ID : 0;
+  $now = time();
+  $expires = 60 * 60;
+
+  $meta_id = $count ? 'mmdimo_donations_count' : 'mmdimo_donations';
+
+  $donations = array(
+    'content' => ''
+  );
+
+  $cached_donations = get_post_meta( $id, $meta_id, TRUE );
+
+  if ( $cached_donations && isset($cached_donations['expires']) && $cached_donations['expires'] > $now ) {
+    $donations = $cached_donations;
+  }
+  else {
+    $mmdimo_case = get_post_meta( $id, 'mmdimo_case', TRUE );
+    $case_id = $mmdimo_case && isset( $mmdimo_case['id'] ) ? $mmdimo_case['id'] : NULL;
+    require_once( MMDIMO_PLUGIN_DIR . '/api.php' );
+
+    if ( $case_id && $content = mmdimo_api_case_donations_load($case_id, $count) ) {
+
+      $donations = array(
+        'content' => $content,
+        'expires' => $now + $expires
+      );
+
+      update_post_meta( $id, $meta_id, $donations );
+    }
+  }
+
+
+  return $donations['content'];
+}
+
 function mmdimo_orghunter_csc_ajax() {
   require_once( MMDIMO_PLUGIN_DIR . '/api.php' );
   $path = substr($_SERVER['PHP_SELF'], strlen($_SERVER['SCRIPT_NAME']) + 1);
