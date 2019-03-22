@@ -192,7 +192,7 @@ function the_mmdimo_donations_list( $before = '', $after = '', $echo = true, $co
   }
 }
 
-function get_the_mmdimo_donations_list( $post = 0, $content = NULL, $display_amount = FALSE, $display_charity = TRUE, $display_donor_name = TRUE, $display_destination = TRUE, $display_honoree = FALSE, $display_deceased = FALSE, $display_total_amount = FALSE ) {
+function get_the_mmdimo_donations_list( $post = 0, $content = NULL, $display_amount = FALSE, $display_charity = TRUE, $display_donor_name = TRUE, $display_destination = TRUE, $display_honoree = FALSE, $display_deceased = FALSE, $display_total_amount = FALSE, $display_date = FALSE ) {
   $post = get_post( $post );
   $id = isset( $post->ID ) ? $post->ID : 0;
   $mmdimo_case = get_post_meta( $id, 'mmdimo_case', TRUE );
@@ -207,6 +207,11 @@ function get_the_mmdimo_donations_list( $post = 0, $content = NULL, $display_amo
       $item = '<li>';
 
       $item .= '<dl>';
+
+      if ( $display_date ) {
+        $item .= '<dt class="mmdimo-donations-list-date">' . __('Date:', 'mmdimo') . '</dt>';
+        $item .= '<dd class="mmdimo-donations-list-date"><span class="mmdimo-donations-list-date">' . date(get_option( 'date_format' ), $donation->created) . '</span></dd>';
+      }
 
       if ( $display_amount ) {
         $item .= '<dt class="mmdimo-donations-list-amount">' . __('Amount:', 'mmdimo') . '</dt>';
