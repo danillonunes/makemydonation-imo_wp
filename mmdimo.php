@@ -37,6 +37,9 @@ define( 'MMDIMO_API_URL_DEFAULT', 'https://api.makemydonation.org/v1' );
 
 require_once( MMDIMO_PLUGIN_DIR . '/template.php' );
 
+require_once( MMDIMO_PLUGIN_DIR . '/lib/wp-background-processing/classes/wp-async-request.php' );
+require_once( MMDIMO_PLUGIN_DIR . '/lib/wp-background-processing/classes/wp-background-process.php' );
+
 if ( is_admin() ) {
   add_action( 'admin_init', 'mmdimo_admin_init' );
   add_action( 'admin_menu', 'mmdimo_admin_menu' );
@@ -247,40 +250,53 @@ function mmdimo_load_funeral_homes() {
 }
 
 function mmdimo_load_donations_by_post( $post_id = 0, $count = FALSE ) {
-  $post = get_post( $post );
-  $id = isset( $post->ID ) ? $post->ID : 0;
+  $now = time();
+
+  $meta_id = $count ? 'mmdimo_donations_count' : 'mmdimo_donations';
+
+  $donations = get_post_meta( $post_id, $meta_id, TRUE );
+
+  if ( !$donations ) {
+    $donations = array(
+      'content' => '',
+      'expires' => 0
+    );
+  }
+
+  if ( $now > $donations['expires'] ) {
+    require_once( MMDIMO_PLUGIN_DIR . '/classes/mmdimo-load-donations.php' );
+    $load_donations = new MMDIMO_Load_Donations();
+
+    $load_donations->push_to_queue( array( 'post_id' => $post_id, 'count' => $count ) );
+    $load_donations->save();
+  }
+
+
+  return $donations['content'];
+}
+
+function mmdimo_load_donations_by_post_process( $post_id = 0, $count = FALSE ) {
   $now = time();
   $expires = 60 * 60;
 
   $meta_id = $count ? 'mmdimo_donations_count' : 'mmdimo_donations';
 
   $donations = array(
-    'content' => ''
+    'content' => '',
+    'expires' => 0
   );
 
-  $cached_donations = get_post_meta( $id, $meta_id, TRUE );
+  $mmdimo_case = get_post_meta( $post_id, 'mmdimo_case', TRUE );
+  $case_id = $mmdimo_case && isset( $mmdimo_case['id'] ) ? $mmdimo_case['id'] : NULL;
+  require_once( MMDIMO_PLUGIN_DIR . '/api.php' );
 
-  if ( $cached_donations && isset($cached_donations['expires']) && $cached_donations['expires'] > $now ) {
-    $donations = $cached_donations;
-  }
-  else {
-    $mmdimo_case = get_post_meta( $id, 'mmdimo_case', TRUE );
-    $case_id = $mmdimo_case && isset( $mmdimo_case['id'] ) ? $mmdimo_case['id'] : NULL;
-    require_once( MMDIMO_PLUGIN_DIR . '/api.php' );
-
-    if ( $case_id && $content = mmdimo_api_case_donations_load($case_id, $count) ) {
-
-      $donations = array(
-        'content' => $content,
-        'expires' => $now + $expires
-      );
-
-      update_post_meta( $id, $meta_id, $donations );
-    }
+  if ( $case_id && $content = mmdimo_api_case_donations_load($case_id, $count) ) {
+    $donations['content'] = $content;
+    $donations['expires'] = $now + $expires;
+    update_post_meta( $post_id, $meta_id, $donations );
   }
 
-
-  return $donations['content'];
+  return $donations;
 }
 
 function mmdimo_orghunter_csc_ajax() {
