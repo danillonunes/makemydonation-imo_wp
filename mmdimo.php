@@ -51,6 +51,7 @@ if ( is_admin() ) {
   add_action( 'wp_ajax_mmdimo_orghunter_csc_ajax', 'mmdimo_orghunter_csc_ajax' );
 }
 
+add_action( 'init', 'mmdimo_init' );
 add_action( 'wp_enqueue_scripts', 'mmdimo_wp_scripts' );
 add_shortcode( 'mmdimo_donation_link', 'shortcode_mmdimo_donation_link' );
 add_shortcode( 'mmdimo_donation_url', 'shortcode_mmdimo_donation_url' );
@@ -70,6 +71,23 @@ function mmdimo_admin_init() {
   register_setting( 'mmdimo', 'mmdimo_fhid' );
   register_setting( 'mmdimo', 'mmdimo_post_type' );
   register_setting( 'mmdimo', 'mmdimo_default_state' );
+}
+
+function mmdimo_init() {
+  if ( isset( $_GET['action'] ) && $_GET['action'] == 'mmdimo_load_donations' ) {
+    return;
+  }
+
+  require_once( MMDIMO_PLUGIN_DIR . '/classes/mmdimo-load-donations.php' );
+  $load_donations = new MMDIMO_Load_Donations();
+
+  if ( isset( $_GET['doing_wp_cron'] ) ) {
+    if ( $load_donations->is_queue_empty() ) {
+      return;
+    }
+  }
+
+  $load_donations->dispatch();
 }
 
 function mmdimo_admin_menu() {
