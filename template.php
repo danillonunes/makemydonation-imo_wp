@@ -209,7 +209,7 @@ function get_the_mmdimo_donations_list( $post = 0, $content = NULL, $display_att
 
   $display_attributes = array_merge($default_display_attributes, $display_attributes);
 
-  if ( $post->ID && $donations['total'] ) {
+  if ( $post->ID && isset($donations['total']) && $donations['total'] ) {
     $list = '<ul class="mmdimo-donations-list">';
 
     foreach ( $donations['data'] as $donation ) {
