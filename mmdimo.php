@@ -190,8 +190,12 @@ function mmdimo_meta_box_save( $post_id, $post, $update ) {
   require_once( MMDIMO_PLUGIN_DIR . '/api.php' );
 
   $current_case = array();
-  if ( $_POST['mmdimo_case_update'] ) {
-    $current_case = mmdimo_api_case_load( $_POST['mmdimo_case_update'] );
+  if ( $postmeta_case = get_post_meta( $post_id, 'mmdimo_case', TRUE )) {
+    $current_case = $postmeta_case;
+  }
+  if ( isset( $_POST['mmdimo_case_update'] ) && $_POST['mmdimo_case_update'] ) {
+    $remote_case = mmdimo_api_case_load( $_POST['mmdimo_case_update'] );
+    $current_case = array_merge($current_case, $remote_case);
   }
   $new_case = array(
     'name' => $post->post_title,
