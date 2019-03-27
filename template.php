@@ -173,8 +173,8 @@ function shortcode_mmdimo_donations_count( $content = NULL ) {
   return get_the_mmdimo_donations_count(0, $content);
 }
 
-function the_mmdimo_donations_list( $before = '', $after = '', $echo = true, $content = NULL ) {
-  $donations = get_the_mmdimo_donations_list(0, $content);
+function the_mmdimo_donations_list( $before = '', $after = '', $echo = true, $content = NULL, $display_attributes = array() ) {
+  $donations = get_the_mmdimo_donations_list(0, $content, $display_attributes = array());
 
   if ( strlen($donations) == 0 ) {
     return;
