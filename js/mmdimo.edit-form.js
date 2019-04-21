@@ -136,6 +136,10 @@ $('#mmdimo_meta_box').each(function() {
       });
     }
 
+    window.setTimeout(function() {
+      $orghunterCSC.trigger('ohcsc-refresh');
+    }, 1000);
+
     $select
       .bind('change', function() {
         if ($single.is(':checked')) {
