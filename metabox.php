@@ -41,7 +41,7 @@
       <div id="mmdimo-charity-selection">
         <div id="orghunter-csc" data-default-state="<?php echo $mmdimo_default_state; ?>"></div>
         <input type="text" id="mmdimo-charities" name="mmdimo_charities" size="20" value="<?php echo $mmdimo_charities; ?>">
-        <input type="hidden" id="mmdimo-charity-metadata" name="mmdimo_charity_metadata" value='<?php echo $mmdimo_charity_metadata; ?>'>
+        <input type="hidden" id="mmdimo-charity-metadata" name="mmdimo_charity_metadata" value='<?php echo base64_encode($mmdimo_charity_metadata); ?>'>
         <br>
       </div>
     </p>

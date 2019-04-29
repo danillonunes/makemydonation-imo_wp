@@ -121,7 +121,7 @@ $('#mmdimo_meta_box').each(function() {
       });
 
     if ($charityMeta.val()) {
-      var defaultMetadata = $.parseJSON($charityMeta.val());
+      var defaultMetadata = $.parseJSON(atob($charityMeta.val()));
       if (typeof defaultMetadata.charity != 'undefined') {
         metadata['charity-ein-' + defaultMetadata.charity.ein_hash] = defaultMetadata;
       }
