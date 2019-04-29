@@ -148,6 +148,7 @@ $('#mmdimo_meta_box').each(function() {
         else {
          $charitySelect.hide();
         }
+        $orghunterCSC.trigger('ohcsc-refresh');
       })
       .trigger('change');
 
