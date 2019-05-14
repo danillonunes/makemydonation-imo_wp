@@ -2,7 +2,7 @@
 Contributors: danillonunes
 Tags: obituary, funeral home, charity, search, third-party, donation
 Requires at least: 3.7
-Tested up to: 5.1.1
+Tested up to: 5.2
 Stable tag: 1.11.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
