@@ -201,7 +201,6 @@ function mmdimo_meta_box_save( $post_id, $post, $update ) {
     'name' => $post->post_title,
     'family_email' => '',
     'family_emails' => explode(',', $_POST['mmdimo_family_emails']),
-    'family_notify' => isset( $_POST['mmdimo_family_notify'] ) && $_POST['mmdimo_family_notify'] ? '1' : '0',
     'charity' => '',
     'charities' => $_POST['mmdimo_charity_select'] == 'select' ? explode(',', $_POST['mmdimo_charities']) : array(),
     'status' => 1,

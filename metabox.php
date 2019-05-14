@@ -18,12 +18,6 @@
     </p>
   </div>
 
-  <div class="mmdimo-field-family-notify">
-    <label class="selectit">
-      <input value="1" type="checkbox" name="mmdimo_family_notify" id="mmdimo-family-notify"> <?php _e( 'Notify the family', 'mmdimo' ) ?>
-    </label>
-  </div>
-
   <div class="mmdimo-field-charity">
     <p>
       <label for="mmdimo-charity"><?php _e( 'Charity' ); ?></label>
