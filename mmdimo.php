@@ -71,6 +71,7 @@ function mmdimo_admin_init() {
   register_setting( 'mmdimo', 'mmdimo_fhid' );
   register_setting( 'mmdimo', 'mmdimo_post_type' );
   register_setting( 'mmdimo', 'mmdimo_default_state' );
+  register_setting( 'mmdimo', 'mmdimo_case_check_default' );
 }
 
 function mmdimo_init() {
@@ -137,7 +138,7 @@ function mmdimo_meta_box_callback( $post ) {
     $mmdimo_family_emails = implode( ',', $mmdimo_family_emails );
   }
 
-  $mmdimo_case_checked = TRUE;
+  $mmdimo_case_checked = get_option('mmdimo_case_check_default') !== '';
   if ( isset( $mmdimo_case ) && $mmdimo_case ) {
     if ( isset( $mmdimo_case['status'] ) && $mmdimo_case['status'] == 0 ) {
       $mmdimo_case_checked = FALSE;

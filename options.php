@@ -58,6 +58,20 @@
 </tr>
 
 <tr>
+<th scope="row"><label for="mmdimo_case_check_default"><?php _e( 'Default Settings', 'mmdimo' ); ?></label></th>
+<td>
+  <?php $mmdimo_case_check_default = get_option('mmdimo_case_check_default') !== ''; ?>
+  <p>
+    <label>
+      <input type="checkbox" name="mmdimo_case_check_default" id="mmdimo-case-check-default" value="1" <?php if ($mmdimo_case_check_default) { echo 'checked="checked"'; } ?>>
+      <?php _e( 'Allow Memorial Donations', 'mmdimo' ); ?>
+    </label>
+  </p>
+  <p class="description"><?php _e( 'Enable memorial donations by default when creating a new post.', 'mmdimo' ); ?></p>
+</td>
+</tr>
+
+<tr>
 <th scope="row"><label for="mmdimo_default_state"><?php _e( 'Default State', 'mmdimo' ); ?></label></th>
 <td>
   <?php $mmdimo_default_state = get_option('mmdimo_default_state'); ?>
