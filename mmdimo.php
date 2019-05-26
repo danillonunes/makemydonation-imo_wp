@@ -49,6 +49,7 @@ if ( is_admin() ) {
   add_action( 'admin_enqueue_scripts', 'mmdimo_admin_scripts' );
   add_action( 'wp_ajax_mmdimo_load_funeral_homes', 'mmdimo_load_funeral_homes' );
   add_action( 'wp_ajax_mmdimo_orghunter_csc_ajax', 'mmdimo_orghunter_csc_ajax' );
+  add_action( 'wp_ajax_mmdimo_check_update', 'mmdimo_check_update_ajax' );
 }
 
 add_action( 'init', 'mmdimo_init' );
@@ -72,6 +73,7 @@ function mmdimo_admin_init() {
   register_setting( 'mmdimo', 'mmdimo_post_type' );
   register_setting( 'mmdimo', 'mmdimo_default_state' );
   register_setting( 'mmdimo', 'mmdimo_case_check_default' );
+  register_setting( 'mmdimo', 'mmdimo_update' );
 }
 
 function mmdimo_init() {
@@ -118,6 +120,7 @@ function mmdimo_admin_scripts( $hook ) {
       break;
     case 'settings_page_mmdimo':
       wp_enqueue_script( 'mmdimo-options-form', plugin_dir_url( __FILE__ ) . 'js/mmdimo.options-form.js', array(), $data['Version'] );
+      wp_enqueue_script( 'mmdimo-update-check', plugin_dir_url( __FILE__ ) . 'js/mmdimo.update-check.js', array(), $data['Version'] );
       wp_enqueue_style( 'mmdimo-options-form', plugin_dir_url( __FILE__ ) . 'css/mmdimo.options-form.css', array(), $data['Version'] );
       break;
   }
@@ -319,6 +322,86 @@ function mmdimo_load_donations_by_post_process( $post_id = 0, $count = FALSE ) {
   }
 
   return $donations;
+}
+
+function mmdimo_check_update_ajax() {
+  $check_update = mmdimo_check_update();
+  if ($check_update) {
+    die(json_encode($check_update));
+  }
+}
+
+function mmdimo_check_update() {
+  $plugin_info = mmdimo_get_plugin_info();
+  $current_plugin = current( $plugin_info );
+  $updated_plugin = get_option( 'mmdimo_update' );
+
+  if ($updated_plugin && version_compare( $updated_plugin['new_version'], $current_plugin['Version'] ) && $updated_plugin['check_time'] + (60 * 60 * 24) < time()) {
+    return $updated_plugin;
+  }
+  elseif ($updated_plugin && version_compare( $updated_plugin['new_version'], $current_plugin['Version'] ) <= 0) {
+    delete_option( 'mmdimo_update' );
+  }
+
+  $remote_plugin = mmdimo_check_update_remote( $plugin_info );
+
+  if ( $remote_plugin ) {
+    $remote_plugin['check_time'] = time();
+    update_option( 'mmdimo_update', $remote_plugin );
+
+    $updated_plugin = $remote_plugin;
+  }
+
+  return $updated_plugin;
+}
+
+function mmdimo_get_plugin_info() {
+  $plugins = get_plugins();
+
+  foreach ($plugins as $plugin_path => $plugin) {
+    if (strpos($plugin_path, 'mmdimo.php') !== FALSE) {
+      return array($plugin_path => $plugin);
+    }
+  }
+
+  return NULL;
+}
+
+function mmdimo_check_update_remote( $plugin ) {
+  $to_send = array(
+    'plugins' => $plugin,
+    'active' => array_keys($plugin)
+  );
+
+  // include an unmodified $wp_version
+  include( ABSPATH . WPINC . '/version.php' );
+
+  $options = array(
+    'timeout'    => 5,
+    'body'       => array(
+      'plugins'      => wp_json_encode( $to_send ),
+      'translations' => wp_json_encode( array() ),
+      'locale'       => wp_json_encode( array() ),
+      'all'          => wp_json_encode( false ),
+    ),
+    'user-agent' => 'WordPress/' . $wp_version . '; ' . home_url( '/' ),
+  );
+
+  $url = 'http://api.wordpress.org/plugins/update-check/1.1/';
+  if ( $ssl = wp_http_supports( array( 'ssl' ) ) ) {
+    $url = set_url_scheme( $url, 'https' );
+  }
+
+  $raw_response = wp_remote_post( $url, $options );
+
+  if ( !is_wp_error( $raw_response ) ) {
+    $response = json_decode( wp_remote_retrieve_body( $raw_response ), true );
+    if ( isset( $response['plugins'] ) ) {
+      return current( $response['plugins'] );
+    }
+  }
+
+  return FALSE;
 }
 
 function mmdimo_orghunter_csc_ajax() {
