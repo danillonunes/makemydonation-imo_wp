@@ -127,7 +127,6 @@ function mmdimo_api_case_create( $case ) {
       'funeral_home' => get_option('mmdimo_fhid'),
       'internal_id' => '',
       'family_emails' => array(),
-      'family_notify' => '0',
       'charity' => '',
     );
     $case = array_merge( $default_values, $case );
@@ -159,7 +158,6 @@ function mmdimo_api_case_update( $case ) {
       'funeral_home' => get_option('mmdimo_fhid'),
       'internal_id' => '',
       'family_emails' => array(),
-      'family_notify' => '0',
       'charity' => '',
     );
     $case = array_merge( $default_values, $case );
