@@ -206,6 +206,9 @@ function mmdimo_meta_box_save( $post_id, $post, $update ) {
     $case = array_merge($current_case, $new_case);
 
     update_post_meta( $post_id, 'mmdimo_case', $case );
+    if ( isset( $_POST['mmdimo_charity_metadata'] ) ) {
+      update_post_meta( $post_id, 'mmdimo_charity_metadata', preg_replace( '/charity-ein-/', '', $_POST['mmdimo_charity_metadata'] ) );
+    }
 
     if ( !isset( $case['id'] ) || !$case['id'] ) {
       $saved_case = mmdimo_api_case_create( $case );
