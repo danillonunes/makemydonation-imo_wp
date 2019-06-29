@@ -181,61 +181,112 @@ function mmdimo_meta_box_callback( $post ) {
 }
 
 function mmdimo_meta_box_save( $post_id, $post, $update ) {
-  if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
+  $request_data = $_POST;
+  $validate = mmdimo_meta_box_save_validate($post_id, $post, $update, $request_data);
 
-  if( !current_user_can( 'edit_post', $post_id ) ) return;
+  if (!is_wp_error($validate)) {
+    require_once( MMDIMO_PLUGIN_DIR . '/api.php' );
 
-  if( ( !isset( $_POST['mmdimo_case_create'] ) || !$_POST['mmdimo_case_create'] ) && ( !isset( $_POST['mmdimo_case_update'] ) || !$_POST['mmdimo_case_update'] ) ) return;
+    $current_case = array();
+    if ( $postmeta_case = get_post_meta( $post_id, 'mmdimo_case', TRUE )) {
+      $current_case = $postmeta_case;
+    }
+    if ( isset( $_POST['mmdimo_case_update'] ) && $_POST['mmdimo_case_update'] ) {
+      $remote_case = mmdimo_api_case_load( $_POST['mmdimo_case_update'] );
+      $current_case = array_merge($current_case, $remote_case);
+    }
+    $new_case = array(
+      'name' => $post->post_title,
+      'family_email' => '',
+      'family_emails' => explode(',', $_POST['mmdimo_family_emails']),
+      'charity' => '',
+      'charities' => $_POST['mmdimo_charity_select'] == 'select' ? explode(',', $_POST['mmdimo_charities']) : array(),
+      'status' => 1,
+    );
+    $case = array_merge($current_case, $new_case);
 
-  if ( $_POST['mmdimo_case_create'] && ( !isset( $_POST['mmdimo_case_update'] ) || !$_POST['mmdimo_case_update'] ) && ( !isset( $_POST['mmdimo_case_nonce'] ) || !wp_verify_nonce( $_POST['mmdimo_case_nonce'], 'mmdimo_post_case_create' ) ) ) return;
+    update_post_meta( $post_id, 'mmdimo_case', $case );
 
-  if ( $_POST['mmdimo_case_update'] && ( !isset( $_POST['mmdimo_case_nonce'] ) || !wp_verify_nonce( $_POST['mmdimo_case_nonce'], 'mmdimo_post_case_update_' . $_POST['mmdimo_case_update'] ) ) ) return;
+    if ( !isset( $case['id'] ) || !$case['id'] ) {
+      $saved_case = mmdimo_api_case_create( $case );
+    }
+    else {
+      $saved_case = mmdimo_api_case_update( $case );
+    }
 
-  require_once( MMDIMO_PLUGIN_DIR . '/api.php' );
-
-  $current_case = array();
-  if ( $postmeta_case = get_post_meta( $post_id, 'mmdimo_case', TRUE )) {
-    $current_case = $postmeta_case;
-  }
-  if ( isset( $_POST['mmdimo_case_update'] ) && $_POST['mmdimo_case_update'] ) {
-    $remote_case = mmdimo_api_case_load( $_POST['mmdimo_case_update'] );
-    $current_case = array_merge($current_case, $remote_case);
-  }
-  $new_case = array(
-    'name' => $post->post_title,
-    'family_email' => '',
-    'family_emails' => explode(',', $_POST['mmdimo_family_emails']),
-    'charity' => '',
-    'charities' => $_POST['mmdimo_charity_select'] == 'select' ? explode(',', $_POST['mmdimo_charities']) : array(),
-    'status' => 1,
-  );
-  $case = array_merge($current_case, $new_case);
-
-  update_post_meta( $post_id, 'mmdimo_case', $case );
-
-  if ( !isset( $case['id'] ) || !$case['id'] ) {
-    $saved_case = mmdimo_api_case_create( $case );
-  }
-  else {
-    $saved_case = mmdimo_api_case_update( $case );
-  }
-
-  if ( isset( $saved_case['id'] ) ) {
-    update_post_meta( $post_id, 'mmdimo_case', $saved_case );
-
-    if ( $_POST['mmdimo_case_update'] && ( !isset( $_POST['mmdimo_case_create'] ) || !$_POST['mmdimo_case_create'] )) {
-      $saved_case['status'] = 0;
-
+    if ( isset( $saved_case['id'] ) ) {
       update_post_meta( $post_id, 'mmdimo_case', $saved_case );
-    }
 
-    if ( isset( $_POST['mmdimo_charity_metadata'] ) ) {
-      update_post_meta( $post_id, 'mmdimo_charity_metadata', preg_replace( '/charity-ein-/', '', $_POST['mmdimo_charity_metadata'] ) );
+      if ( $_POST['mmdimo_case_update'] && ( !isset( $_POST['mmdimo_case_create'] ) || !$_POST['mmdimo_case_create'] )) {
+        $saved_case['status'] = 0;
+
+        update_post_meta( $post_id, 'mmdimo_case', $saved_case );
+      }
+
+      if ( isset( $_POST['mmdimo_charity_metadata'] ) ) {
+        update_post_meta( $post_id, 'mmdimo_charity_metadata', preg_replace( '/charity-ein-/', '', $_POST['mmdimo_charity_metadata'] ) );
+      }
+    }
+    else {
+      mmdimo_error_message(__( 'Error while connecting to the Make My Donation API server. Edit and save the post to try again.', 'mmdimo' ));
     }
   }
-  else {
-    mmdimo_error_message(__( 'Error while connecting to the Make My Donation API server. Edit and save the post to try again.', 'mmdimo' ));
+}
+
+/**
+ * Validate the case data sent from the metabox in a save_post action.
+ *
+ * See save_post action reference for $post_id, $post and $update parameters.
+ *
+ * @param $post_id
+ * @param $post
+ * @param $update
+ * @param $request
+ *   The PHP formatted array with the request data. Usually the global $_POST variable.
+ *
+ * @return
+ *   TRUE if valid or WP_Error object if invalid.
+ */
+function mmdimo_meta_box_save_validate($post_id, $post, $update, $request) {
+  $error = new WP_Error();
+
+  if (empty($request)) {
+    $error->add('mmdimo_meta_box_save_empty_request', __('Empty request data.', 'mmdimo'));
   }
+
+  $doing_autosave = defined('DOING_AUTOSAVE') && DOING_AUTOSAVE;
+  if ($doing_autosave) {
+    $error->add('mmdimo_meta_box_save_autosave', __('Not creating a case while doing autosave.', 'mmdimo'));
+  }
+
+  $can_edit = current_user_can('edit_post', $post_id);
+  if (!$can_edit) {
+    $error->add('mmdimo_meta_box_save_not_authorized', __('User cannot edit this post.', 'mmdimo'));
+  }
+
+  $post_type = get_post_type($post_id);
+  $mmdimo_post_type = get_option('mmdimo_post_type');
+  $post_type = !$mmdimo_post_type || ($mmdimo_post_type && $mmdimo_post_type == $post_type);
+  if (!$post_type) {
+    $error->add('mmdimo_meta_box_save_invalid_post_type', __('Invalid post type.', 'mmdimo'));
+  }
+
+  $action_create = isset($request['mmdimo_case_create']) && $request['mmdimo_case_create'];
+  $action_update = isset($request['mmdimo_case_update']) && $request['mmdimo_case_update'];
+  $nonce_create = isset($request['mmdimo_case_nonce']) && wp_verify_nonce($request['mmdimo_case_nonce'], 'mmdimo_post_case_create');
+  $nonce_update = isset($request['mmdimo_case_nonce']) && wp_verify_nonce($request['mmdimo_case_nonce'], 'mmdimo_post_case_update');
+  $doing_create = $action_create && !$action_update && $nonce_create;
+  $doing_update = $action_update && !$action_create && $nonce_update;
+  $create_or_update = $doing_create || $doing_update;
+  if (!$create_or_update) {
+    $error->add('mmdimo_meta_box_save_invalid_create_or_update', __('Invalid create or update nonce.', 'mmdimo'));
+  }
+
+  if (!empty($error->get_error_codes())) {
+    return $error;
+  }
+
+  return TRUE;
 }
 
 function mmdimo_error_message( $message = NULL ) {
