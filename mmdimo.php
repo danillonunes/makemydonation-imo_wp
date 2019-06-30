@@ -74,6 +74,7 @@ function mmdimo_admin_init() {
   register_setting( 'mmdimo', 'mmdimo_default_state' );
   register_setting( 'mmdimo', 'mmdimo_case_check_default' );
   register_setting( 'mmdimo', 'mmdimo_update' );
+  register_setting( 'mmdimo', 'mmdimo_install_uuid' );
 }
 
 function mmdimo_init() {
@@ -495,4 +496,31 @@ function mmdimo_orghunter_csc_ajax() {
   }
 
   $response = mmdimo_api_cities_list( $state );
+}
+
+/**
+ * Get an unique id for this plugin installation.
+ *
+ * @return
+ *   String with the UUID value.
+ */
+function mmdimo_get_install_uuid() {
+  $uuid = get_option('mmdimo_install_uuid');
+
+  if (!$uuid) {
+    $uuid = sprintf(
+        '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+        mt_rand( 0, 0xffff ),
+        mt_rand( 0, 0xffff ),
+        mt_rand( 0, 0xffff ),
+        mt_rand( 0, 0x0fff ) | 0x4000,
+        mt_rand( 0, 0x3fff ) | 0x8000,
+        mt_rand( 0, 0xffff ),
+        mt_rand( 0, 0xffff ),
+        mt_rand( 0, 0xffff )
+    );
+    update_option('mmdimo_install_uuid', $uuid);
+  }
+
+  return $uuid;
 }
