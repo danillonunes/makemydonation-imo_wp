@@ -524,3 +524,19 @@ function mmdimo_get_install_uuid() {
 
   return $uuid;
 }
+
+/**
+ * Generate an unique internal id for a given post id.
+ *
+ * @return
+ *   String with generated internal id.
+ */
+function mmdimo_case_generate_internal_id($post_id) {
+  return implode(':', array(
+    'wp',
+    'mmdimo',
+    mmdimo_get_install_uuid(),
+    parse_url(get_option('siteurl'), PHP_URL_HOST),
+    $post_id
+  ));
+}
