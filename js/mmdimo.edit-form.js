@@ -67,6 +67,7 @@ $('#mmdimo_meta_box').each(function() {
         action: 'mmdimo_orghunter_csc_ajax',
       },
       searchAlias: true,
+      stateChosen: false,
       size: 'small',
       defaultState: $orghunterCSC.attr('data-default-state'),
       onCharitySelect: function(ein, data) {
