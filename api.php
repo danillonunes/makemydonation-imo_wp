@@ -48,7 +48,11 @@ function mmdimo_api_request( $method, $path, $data = NULL, $args = array(), $aut
 
   $args = array_merge( $default_args, $args );
 
-  return wp_remote_request( $url . '/' . $path, $args );
+  $raw_response = wp_remote_request( $url . '/' . $path, $args );
+
+  if ( !is_wp_error( $raw_response ) ) {
+    return $raw_response;
+  }
 }
 
 /**
