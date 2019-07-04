@@ -269,8 +269,11 @@ function mmdimo_meta_box_save_validate($post_id, $post, $update, $request) {
   }
 
   $post_type = get_post_type($post_id);
+  $default_invalid_types = array('revision');
   $mmdimo_post_type = get_option('mmdimo_post_type');
-  $post_type = !$mmdimo_post_type || ($mmdimo_post_type && $mmdimo_post_type == $post_type);
+  $default_valid_type = !$mmdimo_post_type && !in_array($post_type, $default_invalid_types);
+  $custom_valid_type = $mmdimo_post_type && $mmdimo_post_type == $post_type;
+  $post_type = $default_valid_type || $custom_valid_type;
   if (!$post_type) {
     $error->add('mmdimo_meta_box_save_invalid_post_type', __('Invalid post type.', 'mmdimo'));
   }
