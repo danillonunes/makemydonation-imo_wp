@@ -174,3 +174,34 @@ function mmdimo_api_case_update( $case ) {
     return FALSE;
   }
 }
+
+/**
+ * Create or update a case using the API.
+ *
+ * @param $case
+ *   Array with the case data as in the API description.
+ * @return
+ *   Array with the case data as in the API description.
+ */
+function mmdimo_api_case_create_or_update( $case ) {
+  if ( isset( $case['internal_id'] ) && $case['internal_id'] && isset( $case['name'] ) && $case['name'] ) {
+    $default_values = array(
+      'action' => 'create_or_update',
+      'funeral_home' => get_option('mmdimo_fhid'),
+      'family_emails' => array(),
+      'charity' => '',
+    );
+    $case = array_merge( $default_values, $case );
+
+    $response = mmdimo_api_request( 'post', 'case', $case );
+
+    if ( isset( $response['response'] ) ) {
+      switch ($response['response']['code']) {
+        case 200:
+          return (array) json_decode( $response['body'] );
+      }
+    }
+
+    return FALSE;
+  }
+}
