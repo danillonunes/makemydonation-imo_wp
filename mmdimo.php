@@ -284,7 +284,7 @@ function mmdimo_meta_box_save_validate($post_id, $post, $update, $request) {
     $error->add('mmdimo_meta_box_save_invalid_create_or_update', __('Invalid create or update nonce.', 'mmdimo'));
   }
 
-  if (!empty($error->get_error_codes())) {
+  if ($error->get_error_codes()) {
     return $error;
   }
 
