@@ -202,6 +202,7 @@ function mmdimo_meta_box_save( $post_id, $post, $update ) {
       'family_emails' => explode(',', $_POST['mmdimo_family_emails']),
       'charities' => $_POST['mmdimo_charity_select'] == 'select' ? explode(',', $_POST['mmdimo_charities']) : array(),
       'status' => 1,
+      'return_url' => get_permalink($post_id)
     );
     $case = array_merge($current_case, $new_case);
 
