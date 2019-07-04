@@ -1,6 +1,6 @@
 <?php defined( 'ABSPATH' ) or die( 'No direct access allowed.' ); ?>
 
-<?php if ( !$mmdimo_case || !$mmdimo_case['id'] ): ?>
+<?php if ( !$mmdimo_case || !isset($mmdimo_case['id']) ): ?>
   <?php wp_nonce_field( 'mmdimo_post_case_create', 'mmdimo_case_nonce' ); ?>
 <?php else: ?>
   <?php wp_nonce_field( 'mmdimo_post_case_update_' . $mmdimo_case['id'], 'mmdimo_case_nonce' ); ?>

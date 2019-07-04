@@ -215,7 +215,7 @@ function mmdimo_meta_box_save( $post_id, $post, $update ) {
     if ( isset( $saved_case['id'] ) ) {
       update_post_meta( $post_id, 'mmdimo_case', $saved_case );
 
-      if ( $_POST['mmdimo_case_update'] && ( !isset( $_POST['mmdimo_case_create'] ) || !$_POST['mmdimo_case_create'] )) {
+      if ( ( isset( $_POST['mmdimo_case_update'] ) && $_POST['mmdimo_case_update'] ) && ( !isset( $_POST['mmdimo_case_create'] ) || !$_POST['mmdimo_case_create'] )) {
         $saved_case['status'] = 0;
 
         update_post_meta( $post_id, 'mmdimo_case', $saved_case );
