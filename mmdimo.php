@@ -197,10 +197,9 @@ function mmdimo_meta_box_save( $post_id, $post, $update ) {
       $current_case = array_merge($current_case, $remote_case);
     }
     $new_case = array(
+      'internal_id' => mmdimo_case_generate_internal_id($post_id),
       'name' => $post->post_title,
-      'family_email' => '',
       'family_emails' => explode(',', $_POST['mmdimo_family_emails']),
-      'charity' => '',
       'charities' => $_POST['mmdimo_charity_select'] == 'select' ? explode(',', $_POST['mmdimo_charities']) : array(),
       'status' => 1,
     );
@@ -211,12 +210,7 @@ function mmdimo_meta_box_save( $post_id, $post, $update ) {
       update_post_meta( $post_id, 'mmdimo_charity_metadata', preg_replace( '/charity-ein-/', '', $_POST['mmdimo_charity_metadata'] ) );
     }
 
-    if ( !isset( $case['id'] ) || !$case['id'] ) {
-      $saved_case = mmdimo_api_case_create( $case );
-    }
-    else {
-      $saved_case = mmdimo_api_case_update( $case );
-    }
+    $saved_case = mmdimo_api_case_create_or_update( $case );
 
     if ( isset( $saved_case['id'] ) ) {
       update_post_meta( $post_id, 'mmdimo_case', $saved_case );
