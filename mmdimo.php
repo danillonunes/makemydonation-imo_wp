@@ -137,6 +137,13 @@ function mmdimo_add_meta_box() {
 
 function mmdimo_meta_box_callback( $post ) {
   $mmdimo_case = get_post_meta( $post->ID, 'mmdimo_case', TRUE );
+  $mmdimo_case_update_id = 0;
+  if (isset($mmdimo_case['internal_id'])) {
+    $mmdimo_case_update_id = $mmdimo_case['internal_id'];
+  }
+  if (isset($mmdimo_case['id'])) {
+    $mmdimo_case_update_id = $mmdimo_case['id'];
+  }
   $mmdimo_family_emails = isset( $mmdimo_case['family_email'] ) ? $mmdimo_case['family_email'] : isset( $mmdimo_case['family_emails'] ) ? $mmdimo_case['family_emails'] : '';
   if (is_array($mmdimo_family_emails)) {
     $mmdimo_family_emails = implode( ',', $mmdimo_family_emails );
@@ -192,7 +199,7 @@ function mmdimo_meta_box_save( $post_id, $post, $update ) {
     if ( $postmeta_case = get_post_meta( $post_id, 'mmdimo_case', TRUE )) {
       $current_case = $postmeta_case;
     }
-    if ( isset( $_POST['mmdimo_case_update'] ) && $_POST['mmdimo_case_update'] ) {
+    if ( isset( $_POST['mmdimo_case_update'] ) && is_numeric($_POST['mmdimo_case_update']) && $_POST['mmdimo_case_update'] ) {
       $remote_case = mmdimo_api_case_load( $_POST['mmdimo_case_update'] );
       $current_case = array_merge($current_case, $remote_case);
     }
@@ -276,9 +283,9 @@ function mmdimo_meta_box_save_validate($post_id, $post, $update, $request) {
   $action_create = isset($request['mmdimo_case_create']) && $request['mmdimo_case_create'];
   $action_update = isset($request['mmdimo_case_update']) && $request['mmdimo_case_update'];
   $nonce_create = isset($request['mmdimo_case_nonce']) && wp_verify_nonce($request['mmdimo_case_nonce'], 'mmdimo_post_case_create');
-  $nonce_update = isset($request['mmdimo_case_nonce']) && wp_verify_nonce($request['mmdimo_case_nonce'], 'mmdimo_post_case_update');
-  $doing_create = $action_create && !$action_update && $nonce_create;
-  $doing_update = $action_update && !$action_create && $nonce_update;
+  $nonce_update = isset($request['mmdimo_case_nonce']) && wp_verify_nonce($request['mmdimo_case_nonce'], 'mmdimo_post_case_update_' . $request['mmdimo_case_update']);
+  $doing_create = $action_create && $nonce_create;
+  $doing_update = $action_update && $nonce_update;
   $create_or_update = $doing_create || $doing_update;
   if (!$create_or_update) {
     $error->add('mmdimo_meta_box_save_invalid_create_or_update', __('Invalid create or update nonce.', 'mmdimo'));
