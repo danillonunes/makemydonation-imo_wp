@@ -210,6 +210,9 @@ $wide-field-load-left: $wide-field-width - $field-load-width - $field-spacing;
 	border-top-color: $highlight-color;
 	color: $white;
 }
+#ohcsc-term-w.fixed-height .tt-menu {
+	overflow: auto;
+}
 
 /**
  * Reset Chosen.
