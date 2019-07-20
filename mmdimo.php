@@ -201,7 +201,9 @@ function mmdimo_meta_box_save( $post_id, $post, $update ) {
     }
     if ( isset( $_POST['mmdimo_case_update'] ) && is_numeric($_POST['mmdimo_case_update']) && $_POST['mmdimo_case_update'] ) {
       $remote_case = mmdimo_api_case_load( $_POST['mmdimo_case_update'] );
-      $current_case = array_merge($current_case, $remote_case);
+      if ($remote_case) {
+        $current_case = array_merge($current_case, $remote_case);
+      }
     }
     $new_case = array(
       'internal_id' => mmdimo_case_generate_internal_id($post_id),
@@ -213,7 +215,9 @@ function mmdimo_meta_box_save( $post_id, $post, $update ) {
     );
     $case = array_merge($current_case, $new_case);
 
-    update_post_meta( $post_id, 'mmdimo_case', $case );
+    if ($case) {
+      update_post_meta( $post_id, 'mmdimo_case', $case );
+    }
     if ( isset( $_POST['mmdimo_charity_metadata'] ) ) {
       update_post_meta( $post_id, 'mmdimo_charity_metadata', preg_replace( '/charity-ein-/', '', $_POST['mmdimo_charity_metadata'] ) );
     }
